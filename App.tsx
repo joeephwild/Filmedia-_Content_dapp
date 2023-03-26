@@ -52,7 +52,7 @@ function App(): JSX.Element {
         <Button
           title="JOIN_LOBBY"
           disabled={!state.matches('Initialized')}
-          onPress={() => send('JOIN_LOBBY')}
+          onPress={() => send({type: 'JOIN_LOBBY', roomId: 'mizanxali'})}
         />
 
         <Text>Lobby</Text>

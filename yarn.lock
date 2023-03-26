@@ -1109,8 +1109,10 @@
   dependencies:
     "@hapi/hoek" "^9.0.0"
 
-"@huddle01/react-native@file:../DAO/sdk/react-native":
-  version "0.0.1"
+"@huddle01/react-native@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@huddle01/react-native/-/react-native-0.0.3.tgz#8e599afd2d9d777d41b3e100afd2df5ba7d3fafe"
+  integrity sha512-s4Vq7uNwyfUiJ7PEuZ+L7TamnZ2WOjTcEnPRyCZ+dCyGR5UTczlXh9thWaD/aBRT153bnbilIotguXIMEgVelg==
   dependencies:
     "@huddle01/react" "^0.0.1"
     "@huddle01/web-core" "^0.0.1"

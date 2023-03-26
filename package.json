@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@huddle01/react": "0.0.1",
-    "@huddle01/react-native": "file:../DAO/sdk/react-native",
+    "@huddle01/react-native": "^0.0.3",
     "@huddle01/web-core": "0.0.1",
     "react": "18.2.0",
     "react-native": "0.71.4",
