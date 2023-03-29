@@ -1,16 +1,42 @@
-import {useHuddle01Mobile} from '@huddle01/react-native';
-import {useEventListener} from '@huddle01/react';
+import {Video} from '@huddle01/react-native/components';
+import {
+  useAudio,
+  useEventListener,
+  useHuddle01,
+  useLobby,
+  useMeetingMachine,
+  usePeers,
+  useRoom,
+  useVideo,
+} from '@huddle01/react-native/hooks';
 import React, {useState} from 'react';
 import {Button, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {RTCView} from 'react-native-webrtc';
-import PeerViewPort from './PeerViewPort';
 
 function App(): JSX.Element {
-  const {state, send} = useHuddle01Mobile();
+  const {state, send} = useMeetingMachine();
+  const {initialize, isInitialized} = useHuddle01();
+  const {joinLobby} = useLobby();
+  const {
+    fetchAudioStream,
+    produceAudio,
+    stopAudioStream,
+    stopProducingAudio,
+    stream: micStream,
+  } = useAudio();
+  const {
+    fetchVideoStream,
+    produceVideo,
+    stopVideoStream,
+    stopProducingVideo,
+    stream: camStream,
+  } = useVideo();
+  const {joinRoom, leaveRoom} = useRoom();
+  const {peers} = usePeers();
 
   const [streamURL, setStreamURL] = useState('');
 
-  useEventListener(state, 'JoinedLobby.Cam.On', () => {
+  useEventListener('lobby:cam-on', () => {
     if (state.context.camStream) {
       console.log('camStream: ', state.context.camStream.toURL());
       setStreamURL(state.context.camStream.toURL());
@@ -70,7 +96,7 @@ function App(): JSX.Element {
               <Button
                 title="INIT"
                 disabled={!state.matches('Idle')}
-                onPress={() => send('INIT')}
+                onPress={() => initialize('INIT')}
               />
             </View>
           </View>
@@ -79,49 +105,49 @@ function App(): JSX.Element {
             <View>
               <View style={styles.button}>
                 <Button
-                  title="ENABLE_CAM"
-                  disabled={!state.matches('JoinedLobby')}
-                  onPress={() => send('ENABLE_CAM')}
+                  title="FETCH_VIDEO_STREAM"
+                  disabled={!fetchVideoStream.isCallable}
+                  onPress={fetchVideoStream}
                 />
               </View>
 
               <View style={styles.button}>
                 <Button
-                  title="ENABLE_MIC"
-                  disabled={!state.matches('JoinedLobby')}
-                  onPress={() => send('ENABLE_MIC')}
+                  title="FETCH_AUDIO_STREAM"
+                  disabled={!fetchAudioStream.isCallable}
+                  onPress={fetchAudioStream}
                 />
               </View>
 
               <View style={styles.button}>
                 <Button
                   title="JOIN_ROOM"
-                  disabled={!state.matches('JoinedLobby')}
-                  onPress={() => send('JOIN_ROOM')}
+                  disabled={!joinRoom.isCallable}
+                  onPress={joinRoom}
                 />
               </View>
 
               <View style={styles.button}>
                 <Button
                   title="LEAVE_LOBBY"
-                  disabled={!state.matches('JoinedLobby')}
+                  disabled={!state.matches('Initialized.JoinedLobby')}
                   onPress={() => send('LEAVE_LOBBY')}
                 />
               </View>
 
               <View style={styles.button}>
                 <Button
-                  title="DISABLE_CAM"
-                  disabled={!state.matches('JoinedLobby')}
-                  onPress={() => send('DISABLE_CAM')}
+                  title="STOP_VIDEO_STREAM"
+                  disabled={!stopVideoStream.isCallable}
+                  onPress={stopVideoStream}
                 />
               </View>
 
               <View style={styles.button}>
                 <Button
-                  title="DISABLE_MIC"
-                  disabled={!state.matches('JoinedLobby')}
-                  onPress={() => send('DISABLE_MIC')}
+                  title="STOP_AUDIO_STREAM"
+                  disabled={!stopAudioStream.isCallable}
+                  onPress={stopAudioStream}
                 />
               </View>
             </View>
@@ -135,10 +161,10 @@ function App(): JSX.Element {
             <View style={styles.button}>
               <Button
                 title="JOIN_LOBBY"
-                disabled={!state.matches('Initialized')}
-                onPress={() =>
-                  send({type: 'JOIN_LOBBY', roomId: 'your_unique_room_id'})
-                }
+                disabled={!joinLobby.isCallable}
+                onPress={() => {
+                  joinLobby('bcf-oplk-xyp');
+                }}
               />
             </View>
           </View>
@@ -149,40 +175,40 @@ function App(): JSX.Element {
               <View style={styles.button}>
                 <Button
                   title="PRODUCE_MIC"
-                  disabled={!state.matches('JoinedRoom')}
-                  onPress={() => send('PRODUCE_MIC')}
+                  disabled={!produceAudio.isCallable}
+                  onPress={() => produceAudio(micStream)}
                 />
               </View>
 
               <View style={styles.button}>
                 <Button
                   title="PRODUCE_CAM"
-                  disabled={!state.matches('JoinedRoom')}
-                  onPress={() => send('PRODUCE_CAM')}
+                  disabled={!produceVideo.isCallable}
+                  onPress={() => produceVideo(camStream)}
                 />
               </View>
 
               <View style={styles.button}>
                 <Button
                   title="STOP_PRODUCING_MIC"
-                  disabled={!state.matches('JoinedRoom')}
-                  onPress={() => send('STOP_PRODUCING_MIC')}
+                  disabled={!stopProducingAudio.isCallable}
+                  onPress={() => stopProducingAudio()}
                 />
               </View>
 
               <View style={styles.button}>
                 <Button
                   title="STOP_PRODUCING_CAM"
-                  disabled={!state.matches('JoinedRoom')}
-                  onPress={() => send('STOP_PRODUCING_CAM')}
+                  disabled={!stopProducingVideo.isCallable}
+                  onPress={() => stopProducingVideo()}
                 />
               </View>
 
               <View style={styles.button}>
                 <Button
                   title="LEAVE_ROOM"
-                  disabled={!state.matches('JoinedRoom')}
-                  onPress={() => send('LEAVE_ROOM')}
+                  disabled={!leaveRoom.isCallable}
+                  onPress={leaveRoom}
                 />
               </View>
             </View>
@@ -206,17 +232,18 @@ function App(): JSX.Element {
           />
         </View>
         <View>
-          {Object.keys(state.context.consumers)
-            .filter(
-              peerId =>
-                state.context.consumers[peerId] &&
-                state.context.consumers[peerId].track?.kind === 'video',
-            )
-            .map(peerId => (
-              <PeerViewPort
-                key={peerId}
-                peerId={peerId}
-                track={state.context.consumers[peerId].track}
+          {Object.values(peers)
+            .filter(peer => peer.cam)
+            .map(peer => (
+              <Video
+                key={peer.peerId}
+                peerId={peer.peerId}
+                track={peer.cam}
+                style={{
+                  backgroundColor: 'white',
+                  width: '75%',
+                  height: '100%',
+                }}
               />
             ))}
         </View>

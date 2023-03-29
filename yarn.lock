@@ -1109,23 +1109,25 @@
   dependencies:
     "@hapi/hoek" "^9.0.0"
 
-"@huddle01/react-native@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@huddle01/react-native/-/react-native-0.0.3.tgz#8e599afd2d9d777d41b3e100afd2df5ba7d3fafe"
-  integrity sha512-s4Vq7uNwyfUiJ7PEuZ+L7TamnZ2WOjTcEnPRyCZ+dCyGR5UTczlXh9thWaD/aBRT153bnbilIotguXIMEgVelg==
+"@huddle01/react-native@0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@huddle01/react-native/-/react-native-0.0.5.tgz#e6790c49551cb18baad8bce758f4b6ec41aa4e9c"
+  integrity sha512-BBNXZxF/o+oTvmfyxuhmSEvy7HMHcGRN31Jf/L2jc1i5E9oBTGp0vv3xqao2ZobimKcTb+wKSWV4xmpEW8ySmg==
   dependencies:
-    "@huddle01/react" "^0.0.1"
-    "@huddle01/web-core" "^0.0.1"
+    "@huddle01/web-core" "^0.0.3"
     jotai "^2.0.3"
     jotai-xstate "^0.2.0"
+    react "^18.2.0"
+    react-native "^0.71.4"
     react-native-webrtc "^106.0.7"
+    xstate "^4.36.0"
 
-"@huddle01/react@0.0.1", "@huddle01/react@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@huddle01/react/-/react-0.0.1.tgz#7557d31de76202e089f968f14a7e27eb33a2bff1"
-  integrity sha512-3XutIuFkllBEXQfrr7wzZxqce5eL9G2i/DDSZiKLN+JI0d60WhTHIvf8ulR+prLm2mlLVQhgT8oeFcPD8uoAEQ==
+"@huddle01/react@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@huddle01/react/-/react-0.0.3.tgz#6950f731b2521acc9dc65d487b1397da94e61d26"
+  integrity sha512-WmrxWf6le4KHFRI97mh9bBwMXn1U9+gXmz7INKQ+fUcS+G22inFyV0xpIkyFSkQXL0HMMJrLncZ3oCCwLbJdpg==
   dependencies:
-    "@huddle01/web-core" "0.0.1"
+    "@huddle01/web-core" "^0.0.3"
     "@xstate/inspect" "^0.7.1"
     "@xstate/react" "^3.2.1"
     jotai "^2.0.3"
@@ -1134,10 +1136,10 @@
     ws "^8.0.0"
     xstate "^4.36.0"
 
-"@huddle01/web-core@0.0.1", "@huddle01/web-core@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@huddle01/web-core/-/web-core-0.0.1.tgz#c8ff49d6119ce043284e73ba182123ce8aabf796"
-  integrity sha512-b2iuGUYsjXt1TsSq4Vsg3TcRrV8Uqw/5SmCtDIylbdLVYKlqRWjzkuX69GIjwSG2BofJX32nmwae+5TwrYro3w==
+"@huddle01/web-core@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@huddle01/web-core/-/web-core-0.0.3.tgz#15777a788f4fece3d6757b169ffe9bf4a02c4af6"
+  integrity sha512-DfhGa7+y3JBh7AUvcAAeyyPiuqjQK0tX4LSZhZLTqtB9zSQRCQMvKIh1LNXqCvx0zVIOF0NhHYuHaYltvE8iDw==
   dependencies:
     axios "^1.3.3"
     mediasoup-client "^3.6.80"
@@ -6001,7 +6003,7 @@ react-native-webrtc@^106.0.7:
     event-target-shim "6.0.2"
     tar "6.1.11"
 
-react-native@0.71.4:
+react-native@0.71.4, react-native@^0.71.4:
   version "0.71.4"
   resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.71.4.tgz#f03f600efe68f745d19454ab17f9c1a9ef304790"
   integrity sha512-3hSYqvWrOdKhpV3HpEKp1/CkWx8Sr/N/miCrmUIAsVTSJUR7JW0VvIsrV9urDhUj/s6v2WF4n7qIEEJsmTCrPw==
@@ -6063,7 +6065,7 @@ react-test-renderer@18.2.0:
     react-shallow-renderer "^16.15.0"
     scheduler "^0.23.0"
 
-react@18.2.0:
+react@18.2.0, react@^18.2.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react/-/react-18.2.0.tgz#555bd98592883255fa00de14f1151a917b5d77d5"
   integrity sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==
