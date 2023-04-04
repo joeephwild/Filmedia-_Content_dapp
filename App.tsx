@@ -14,9 +14,9 @@ import {Button, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {RTCView} from 'react-native-webrtc';
 
 function App(): JSX.Element {
-  const {state, send} = useMeetingMachine();
+  const {state} = useMeetingMachine();
   const {initialize, isInitialized} = useHuddle01();
-  const {joinLobby} = useLobby();
+  const {joinLobby, leaveLobby} = useLobby();
   const {
     fetchAudioStream,
     produceAudio,
@@ -30,6 +30,8 @@ function App(): JSX.Element {
     stopVideoStream,
     stopProducingVideo,
     stream: camStream,
+    switchCamera,
+    isFrontCamera,
   } = useVideo();
   const {joinRoom, leaveRoom} = useRoom();
   const {peers} = usePeers();
@@ -37,9 +39,9 @@ function App(): JSX.Element {
   const [streamURL, setStreamURL] = useState('');
 
   useEventListener('lobby:cam-on', () => {
-    if (state.context.camStream) {
-      console.log('camStream: ', state.context.camStream.toURL());
-      setStreamURL(state.context.camStream.toURL());
+    if (camStream) {
+      console.log('camStream: ', camStream.toURL());
+      setStreamURL(camStream.toURL());
     }
   });
 
@@ -131,7 +133,7 @@ function App(): JSX.Element {
                 <Button
                   title="LEAVE_LOBBY"
                   disabled={!state.matches('Initialized.JoinedLobby')}
-                  onPress={() => send('LEAVE_LOBBY')}
+                  onPress={leaveLobby}
                 />
               </View>
 
@@ -216,11 +218,15 @@ function App(): JSX.Element {
         </View>
       </View>
 
+      <View style={styles.button}>
+        <Button title="SWITCH_CAMERA" onPress={switchCamera} />
+      </View>
+
       <View style={styles.videoSection}>
         <Text style={styles.text}>My Video:</Text>
         <View style={styles.myVideo}>
           <RTCView
-            mirror={true}
+            mirror={isFrontCamera}
             objectFit={'cover'}
             streamURL={streamURL}
             zOrder={0}
