@@ -1,21 +1,19 @@
 import {Video} from '@huddle01/react-native/components';
 import {
   useAudio,
-  useEventListener,
   useHuddle01,
   useLobby,
-  useMeetingMachine,
   usePeers,
   useRoom,
   useVideo,
+  useEventListener,
 } from '@huddle01/react-native/hooks';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {RTCView} from 'react-native-webrtc';
 
 function App(): JSX.Element {
-  const {state} = useMeetingMachine();
-  const {initialize, isInitialized} = useHuddle01();
+  const {initialize, roomState} = useHuddle01();
   const {joinLobby, leaveLobby} = useLobby();
   const {
     fetchAudioStream,
@@ -30,18 +28,18 @@ function App(): JSX.Element {
     stopVideoStream,
     stopProducingVideo,
     stream: camStream,
-    switchCamera,
-    isFrontCamera,
   } = useVideo();
   const {joinRoom, leaveRoom} = useRoom();
   const {peers} = usePeers();
 
   const [streamURL, setStreamURL] = useState('');
 
-  useEventListener('lobby:cam-on', () => {
-    if (camStream) {
-      console.log('camStream: ', camStream.toURL());
-      setStreamURL(camStream.toURL());
+  useEventListener('app:cam-on', stream => {
+    console.log('appcamon event', camStream);
+
+    if (stream) {
+      console.log('stream: ', stream.toURL());
+      setStreamURL(stream.toURL());
     }
   });
 
@@ -55,37 +53,7 @@ function App(): JSX.Element {
             <Text style={styles.text}>Room State</Text>
           </View>
           <View style={styles.infoValue}>
-            <Text style={styles.text}>{JSON.stringify(state.value)}</Text>
-          </View>
-        </View>
-        <View style={styles.infoTab}>
-          <View style={styles.infoKey}>
-            <Text style={styles.text}>Me Id</Text>
-          </View>
-          <View style={styles.infoValue}>
-            <Text style={styles.text}>
-              {JSON.stringify(state.context.peerId)}
-            </Text>
-          </View>
-        </View>
-        <View style={styles.infoTab}>
-          <View style={styles.infoKey}>
-            <Text style={styles.text}>Peers</Text>
-          </View>
-          <View style={styles.infoValue}>
-            <Text style={styles.text}>
-              {JSON.stringify(state.context.peers)}
-            </Text>
-          </View>
-        </View>
-        <View style={styles.infoTab}>
-          <View style={styles.infoKey}>
-            <Text style={styles.text}>Consumers</Text>
-          </View>
-          <View style={styles.infoValue}>
-            <Text style={styles.text}>
-              {JSON.stringify(state.context.consumers)}
-            </Text>
+            <Text style={styles.text}>{JSON.stringify(roomState)}</Text>
           </View>
         </View>
       </View>
@@ -97,8 +65,8 @@ function App(): JSX.Element {
             <View style={styles.button}>
               <Button
                 title="INIT"
-                disabled={!state.matches('Idle')}
-                onPress={() => initialize('INIT')}
+                // disabled={!state.matches('Idle')}
+                onPress={() => initialize('KL1r3E1yHfcrRbXsT4mcE-3mK60Yc3YR')}
               />
             </View>
           </View>
@@ -108,7 +76,7 @@ function App(): JSX.Element {
               <View style={styles.button}>
                 <Button
                   title="FETCH_VIDEO_STREAM"
-                  disabled={!fetchVideoStream.isCallable}
+                  // disabled={!fetchVideoStream.isCallable}
                   onPress={fetchVideoStream}
                 />
               </View>
@@ -116,7 +84,7 @@ function App(): JSX.Element {
               <View style={styles.button}>
                 <Button
                   title="FETCH_AUDIO_STREAM"
-                  disabled={!fetchAudioStream.isCallable}
+                  // disabled={!fetchAudioStream.isCallable}
                   onPress={fetchAudioStream}
                 />
               </View>
@@ -132,7 +100,7 @@ function App(): JSX.Element {
               <View style={styles.button}>
                 <Button
                   title="LEAVE_LOBBY"
-                  disabled={!state.matches('Initialized.JoinedLobby')}
+                  disabled={!leaveLobby.isCallable}
                   onPress={leaveLobby}
                 />
               </View>
@@ -165,7 +133,7 @@ function App(): JSX.Element {
                 title="JOIN_LOBBY"
                 disabled={!joinLobby.isCallable}
                 onPress={() => {
-                  joinLobby('bcf-oplk-xyp');
+                  joinLobby('fpd-gzrx-xio');
                 }}
               />
             </View>
@@ -186,7 +154,9 @@ function App(): JSX.Element {
                 <Button
                   title="PRODUCE_CAM"
                   disabled={!produceVideo.isCallable}
-                  onPress={() => produceVideo(camStream)}
+                  onPress={() => {
+                    produceVideo(camStream);
+                  }}
                 />
               </View>
 
@@ -218,15 +188,15 @@ function App(): JSX.Element {
         </View>
       </View>
 
-      <View style={styles.button}>
+      {/* <View style={styles.button}>
         <Button title="SWITCH_CAMERA" onPress={switchCamera} />
-      </View>
+      </View> */}
 
       <View style={styles.videoSection}>
         <Text style={styles.text}>My Video:</Text>
         <View style={styles.myVideo}>
           <RTCView
-            mirror={isFrontCamera}
+            // mirror={isFrontCamera}
             objectFit={'cover'}
             streamURL={streamURL}
             zOrder={0}
