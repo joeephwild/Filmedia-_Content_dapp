@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {Video} from '@huddle01/react-native/components';
 import {
   useAudio,
