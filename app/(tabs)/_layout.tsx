@@ -1,7 +1,9 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Link, Tabs } from "expo-router";
-import { Pressable, useColorScheme } from "react-native";
+import { Image, Pressable, Text, View, useColorScheme } from "react-native";
 import React from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import TabHeader from "../../components/TabHeader";
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
@@ -18,14 +20,23 @@ export default function TabLayout() {
 
   return (
     <Tabs
+      initialRouteName="index"
       screenOptions={{
         tabBarHideOnKeyboard: true,
-        headerShown: false,
+        headerShown: true,
         tabBarStyle: {
           backgroundColor: "black",
-          paddingLeft: 31,
-          paddingRight: 30,
-          paddingVertical: 16,
+          paddingLeft: 19,
+          paddingRight: 19,
+          // paddingVertical: 16,
+          height: 70,
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: "600",
+        },
+        header: () => {
+          return <TabHeader />;
         },
       }}
       sceneContainerStyle={{
@@ -33,10 +44,10 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="explore"
+        name="index"
         options={{
           tabBarLabel: "Explore",
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="search" color={color} />,
           headerRight: () => (
             <Pressable>
               {({ pressed }: any) => (
@@ -55,7 +66,7 @@ export default function TabLayout() {
         name="live"
         options={{
           tabBarLabel: "Live",
-          tabBarIcon: ({ color }) => <TabBarIcon name="money" color={color} />,
+          tabBarIcon: ({ color }) => <FontAwesome name="camera"  color={color} size={24} />,
         }}
       />
       <Tabs.Screen
@@ -83,7 +94,7 @@ export default function TabLayout() {
         name="library"
         options={{
           tabBarLabel: "Library",
-          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="th-list" color={color} />,
         }}
       />
     </Tabs>
