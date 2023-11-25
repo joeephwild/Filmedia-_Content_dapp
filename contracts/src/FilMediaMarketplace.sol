@@ -85,6 +85,7 @@ contract FilMediaMarketplace {
     mapping(uint256 tokenId => Music) music;
     mapping(uint256 subcriberAddress => SubriberAnalytics) subribeAnalytics;
     mapping(address user => mapping(address artist => SubriberAnalytics)) userIsSubcribedToAnalystics;
+    mapping(address => mapping(address => bool)) public isSubscribed;
 
     ////////////// EVENTS /////////////////
     event ListedMusicNFT(
@@ -169,16 +170,16 @@ contract FilMediaMarketplace {
 
         User storage _user = user[msg.sender];
         Artist storage _aritst = artist[_artistAddr];
-
-        for (uint i = 0; i < _user.subcribeToAddress.length; i++) {
-            if (_user.subcribeToAddress[i] != _artistAddr) {
-                _aritst.allSubcribers.push(msg.sender);
-                _user.subcribeToAddress.push(_artistAddr);
-            }
-        }
+        bool i_isIncludedInArray = false;
 
         // @checks
         require(balanceOfUser >= avaxUsd, "Insufficient Balance");
+        require(!isSubscribed[msg.sender][_artistAddr], "Already subscribed");
+
+        // @state changes
+        _aritst.allSubcribers.push(msg.sender);
+        _user.subcribeToAddress.push(_artistAddr);
+        isSubscribed[msg.sender][_artistAddr] = true;
 
         (bool success, ) = address(this).call{value: msg.value}("");
         require(success, "Unable to send Avax, basically can not subcribe");
