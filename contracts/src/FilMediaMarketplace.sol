@@ -24,18 +24,18 @@
 
 pragma solidity ^0.8.18;
 
-import {FilMediaToken} from "./FilMediaToken.sol";
+// import {FilMediaToken} from "./FilMediaToken.sol";
 import {IERC20} from "./interface/IERC20.sol";
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import {AutomationCompatible} from "@chainlink/contracts/src/v0.8/automation/AutomationCompatible.sol";
+import {AutomationCompatibleInterface} from "@chainlink/contracts/src/v0.8/automation/AutomationCompatible.sol";
 
-contract FilMediaMarketplace {
+contract FilMediaMarketplace is AutomationCompatibleInterface {
     AggregatorV3Interface internal dataFeed;
 
     // Constants for time calculations
     uint256 constant ONE_MONTH_SECONDS = 30 days;
     uint256 public counter;
-    uint256 public immutable interval;
     uint256 public lastTimeStamp;
     SubriberAnalytics[] isSubcribed; // addresses of user subcribed on the platform (to any artist)
     LastChecked lastChecked;
@@ -48,7 +48,7 @@ contract FilMediaMarketplace {
     }
     struct User {
         address userAddress;
-        address[] subcribeToAddress;
+        address[] subcribeToAddress; // this is the address he is subcribe to
     }
 
     struct SubriberAnalytics {
@@ -76,8 +76,10 @@ contract FilMediaMarketplace {
     struct LastChecked {
         address artistAddress;
         address subcriberAddress;
+        uint256 lastTimeStamp;
     }
     /////////// MAPPING /////////////////
+    mapping(address user => uint256) balance;
     mapping(address artistAddress => Artist) artist;
     mapping(address userAddress => User) user;
     mapping(address artist => mapping(uint256 _tokenId => ListMusicNFT))
@@ -85,7 +87,8 @@ contract FilMediaMarketplace {
     mapping(uint256 tokenId => Music) music;
     mapping(uint256 subcriberAddress => SubriberAnalytics) subribeAnalytics;
     mapping(address user => mapping(address artist => SubriberAnalytics)) userIsSubcribedToAnalystics;
-    mapping(address => mapping(address => bool)) public isSubscribed;
+    mapping(address user => mapping(address artist => bool))
+        public isSubscribed;
 
     ////////////// EVENTS /////////////////
     event ListedMusicNFT(
@@ -112,11 +115,10 @@ contract FilMediaMarketplace {
      * Aggregator: AVAX / USD
      * Address: 0x5498BB86BC934c8D34FDA08E81D444153d0D06aD
      */
-    constructor(uint256 updateInterval) {
+    constructor() {
         dataFeed = AggregatorV3Interface(
             0x5498BB86BC934c8D34FDA08E81D444153d0D06aD
         );
-        interval = updateInterval;
         lastTimeStamp = block.timestamp;
         counter = 0;
     }
@@ -133,7 +135,6 @@ contract FilMediaMarketplace {
 
         // @state changes
         _artist.tokenId.push(_tokenId);
-        _artist.allSubcribers.push(msg.sender);
 
         _listMusicNfts[_artistAddr][_tokenId] = ListMusicNFT({
             nft: _nft,
@@ -165,24 +166,23 @@ contract FilMediaMarketplace {
         // change user currently subcrib to true
         int answer = getChainlinkDataFeedLatestAnswer();
 
-        uint256 avaxUsd = 1e18 / uint256(answer);
+        uint256 avaxOneUsd = 1e18 / uint256(answer);
         uint256 balanceOfUser = msg.sender.balance;
 
         User storage _user = user[msg.sender];
         Artist storage _aritst = artist[_artistAddr];
-        bool i_isIncludedInArray = false;
 
         // @checks
-        require(balanceOfUser >= avaxUsd, "Insufficient Balance");
+        require(balanceOfUser >= avaxOneUsd, "Insufficient Balance");
         require(!isSubscribed[msg.sender][_artistAddr], "Already subscribed");
+
+        (bool success, ) = address(this).call{value: msg.value}("");
+        require(success, "Unable to send Avax, basically can not subcribe");
 
         // @state changes
         _aritst.allSubcribers.push(msg.sender);
         _user.subcribeToAddress.push(_artistAddr);
         isSubscribed[msg.sender][_artistAddr] = true;
-
-        (bool success, ) = address(this).call{value: msg.value}("");
-        require(success, "Unable to send Avax, basically can not subcribe");
 
         userIsSubcribedToAnalystics[msg.sender][
             _artistAddr
@@ -215,13 +215,18 @@ contract FilMediaMarketplace {
 
         // @state changes
         _currentlySubribed.currentlySubcribed = false;
+        isSubscribed[msg.sender][_artistAddr] = false;
 
         emit CanceledSubcription(msg.sender, _artistAddr, block.chainid);
     }
 
     function checkUpkeep(
         bytes calldata /* checkData */
-    ) external returns (bool upkeepNeeded) {
+    )
+        external
+        override
+        returns (bool upkeepNeeded, bytes memory /* performData */)
+    {
         // loop throught the isSubcribed(all users that are subcribed);
         // check get the user
         // check if the time has passed to subcribed then if yes call
@@ -238,29 +243,36 @@ contract FilMediaMarketplace {
             ) {
                 lastChecked = LastChecked({
                     artistAddress: artistAddress,
-                    subcriberAddress: subcriberAddress
+                    subcriberAddress: subcriberAddress,
+                    lastTimeStamp: analystics.lastPaymentTimestamp
                 });
                 upkeepNeeded = true;
-            } else {
-                upkeepNeeded = false;
             }
         }
         // upkeepNeeded = (block.timestamp - lastTimeStamp) > interval;
     }
 
-    function performUpkeep(bytes calldata /* performData */) external payable {
-        if ((block.timestamp - lastTimeStamp) > interval) {
-            LastChecked memory _lastChecked = lastChecked;
+    function performUpkeep(bytes calldata /* performData */) external override {
+        LastChecked memory _lastChecked = lastChecked;
+
+        if (
+            (block.timestamp - _lastChecked.lastTimeStamp) > ONE_MONTH_SECONDS
+        ) {
             address _user = _lastChecked.subcriberAddress;
             address _artist = _lastChecked.artistAddress;
+            int answer = getChainlinkDataFeedLatestAnswer();
+
+            uint256 avaxOneUsd = 1e18 / uint256(answer);
 
             SubriberAnalytics
                 storage _subcribeAnalytics = userIsSubcribedToAnalystics[_user][
                     _artist
                 ];
 
-            (bool success, ) = address(this).call{value: msg.value}("");
-            if (success) {
+            uint256 userBalance = balance[_user];
+
+            if (userBalance >= avaxOneUsd) {
+                userBalance--;
                 _subcribeAnalytics.lastPaymentTimestamp = block.timestamp;
             } else {
                 _subcribeAnalytics.currentlySubcribed = false;

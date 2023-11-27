@@ -21,167 +21,145 @@
 // external & public view & pure functions
 
 // SPDX-License-Identifier: GPL-2.0-or-later
+pragma solidity ^0.8.19;
 
-pragma solidity ^0.6.6;
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@chainlink/contracts/src/v0.8/automation/AutomationCompatible.sol";
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
+contract DynamicArtwork is
+    ERC721Enumerable,
+    ERC721URIStorage,
+    AutomationCompatibleInterface
+{
+    uint256 private lastCheckedBlock;
 
-contract DungeonsAndDragonsCharacter is ERC721, VRFConsumerBase, Ownable {
-    using SafeMath for uint256;
-    using Strings for string;
+    uint256 private _nextTokenId;
 
-    bytes32 internal keyHash;
-    uint256 internal fee;
-    uint256 public randomResult;
-    address public VRFCoordinator;
-    // rinkeby: 0xb3dCcb4Cf7a26f6cf6B120Cf5A73875B7BBc655B
-    address public LinkToken;
-    // rinkeby: 0x01BE23585060835E02B77ef475b0Cc51aA1e0709a
+    string[] ipfsUri = [
+        "https://bafkreibn2ed22zc4h7rhtknra2c5vjjfxtkh7y36nd3mbtd6q6bh5pjs5a.ipfs.nftstorage.link/",
+        "https://bafkreidl6qnywykf6p2swigniocenwzkyc432uwrt4ocf5ig7kzduo4hr4.ipfs.nftstorage.link/",
+        "https://bafkreicxa5zvfzwckqewjd7fdxphwrgwz3awww772nja4fptmjo4nim4ha.ipfs.nftstorage.link/"
+    ];
 
-    struct Character {
-        uint256 strength;
-        uint256 dexterity;
-        uint256 constitution;
-        uint256 intelligence;
-        uint256 wisdom;
-        uint256 charisma;
-        uint256 experience;
-        string name;
+    constructor() ERC721("DynamicNft", "DNFT") {
+        lastCheckedBlock = block.number; // Initialize with the current block number
     }
 
-    Character[] public characters;
+    function safeMint() public {
+        _nextTokenId++;
+        _safeMint(msg.sender, _nextTokenId);
+        _setTokenURI(_nextTokenId, ipfsUri[0]);
+    }
 
-    mapping(bytes32 => string) requestToCharacterName;
-    mapping(bytes32 => address) requestToSender;
-    mapping(bytes32 => uint256) requestToTokenId;
-
-    /**
-     * Constructor inherits VRFConsumerBase
-     *
-     * Network: Rinkeby
-     * Chainlink VRF Coordinator address: 0xb3dCcb4Cf7a26f6cf6B120Cf5A73875B7BBc655B
-     * LINK token address:                0x01BE23585060835E02B77ef475b0Cc51aA1e0709
-     * Key Hash: 0x2ed0feb3e7fd2022120aa84fab1945545a9f2ffc9076fd6156fa96eaff4c1311
-     */
-    constructor(
-        address _VRFCoordinator,
-        address _LinkToken,
-        bytes32 _keyhash
+    function checkUpkeep(
+        bytes calldata /*checkData*/
     )
-        public
-        VRFConsumerBase(_VRFCoordinator, _LinkToken)
-        ERC721("DungeonsAndDragonsCharacter", "D&D")
+        external
+        view
+        override
+        returns (bool upkeepNeeded, bytes memory performData)
     {
-        VRFCoordinator = _VRFCoordinator;
-        LinkToken = _LinkToken;
-        keyHash = _keyhash;
-        fee = 0.1 * 10 ** 18; // 0.1 LINK
+        // Check if the block number has changed since the last check
+        bool blockNumberChanged = block.number > lastCheckedBlock;
+
+        if (blockNumberChanged) {
+            // If the block number has changed, set upkeepNeeded to true
+            return (true, abi.encode(block.number));
+        }
+
+        // If the block number hasn't changed, return false
+        return (false, bytes(""));
     }
 
-    function requestNewRandomCharacter(
-        string memory name
-    ) public returns (bytes32) {
+    function performUpkeep(bytes calldata performData) external override {
+        // Decode the performData to get the latest block number
+        uint256 latestBlockNumber = abi.decode(performData, (uint256));
+
+        // Ensure that the latest block number is valid and has changed since the last check
         require(
-            LINK.balanceOf(address(this)) >= fee,
-            "Not enough LINK - fill contract with faucet"
+            latestBlockNumber > lastCheckedBlock,
+            "Block number hasn't changed."
         );
-        bytes32 requestId = requestRandomness(keyHash, fee);
-        requestToCharacterName[requestId] = name;
-        requestToSender[requestId] = msg.sender;
-        return requestId;
+
+        // Implement the logic to change the dynamic image based on the latest block number
+        updateDynamicImage(latestBlockNumber);
+
+        // Update the lastCheckedBlock to the latest block number
+        lastCheckedBlock = latestBlockNumber;
     }
 
-    function getTokenURI(uint256 tokenId) public view returns (string memory) {
+    function updateDynamicImage(uint256 latestBlockNumber) internal {
+        // Determine the parity of the latest block number (even or odd)
+        bool isEvenBlock = latestBlockNumber % 2 == 0;
+
+        // Use the parity to choose an image
+        string memory newImageURI;
+
+        if (isEvenBlock) {
+            // If the latest block number is even, use one image
+            newImageURI = "https://bafkreidl6qnywykf6p2swigniocenwzkyc432uwrt4ocf5ig7kzduo4hr4.ipfs.nftstorage.link/";
+        } else {
+            // If the latest block number is odd, use another image
+            newImageURI = "https://bafkreicxa5zvfzwckqewjd7fdxphwrgwz3awww772nja4fptmjo4nim4ha.ipfs.nftstorage.link/";
+        }
+
+        // Update the token URI of all NFTs with the new image URI
+        for (uint256 tokenId = 0; tokenId < balanceOf(msg.sender); tokenId++) {
+            _setTokenURI(tokenOfOwnerByIndex(msg.sender, tokenId), newImageURI);
+        }
+    }
+
+    function getTokenUri(uint256 tokenId) public view returns (string memory) {
         return tokenURI(tokenId);
     }
 
-    function setTokenURI(uint256 tokenId, string memory _tokenURI) public {
-        require(
-            _isApprovedOrOwner(_msgSender(), tokenId),
-            "ERC721: transfer caller is not owner nor approved"
-        );
-        _setTokenURI(tokenId, _tokenURI);
-    }
+    //determine the stage of the NFT
+    function getStage(uint256 tokenId) public view returns (uint256) {
+        string memory _uri = tokenURI(tokenId);
 
-    function fulfillRandomness(
-        bytes32 requestId,
-        uint256 randomNumber
-    ) internal override {
-        uint256 newId = characters.length;
-        uint256 strength = (randomNumber % 100);
-        uint256 dexterity = ((randomNumber % 10000) / 100);
-        uint256 constitution = ((randomNumber % 1000000) / 10000);
-        uint256 intelligence = ((randomNumber % 100000000) / 1000000);
-        uint256 wisdom = ((randomNumber % 10000000000) / 100000000);
-        uint256 charisma = ((randomNumber % 1000000000000) / 10000000000);
-        uint256 experience = 0;
-
-        characters.push(
-            Character(
-                strength,
-                dexterity,
-                constitution,
-                intelligence,
-                wisdom,
-                charisma,
-                experience,
-                requestToCharacterName[requestId]
+        uint256 id;
+        //seed
+        if (
+            keccak256(abi.encodePacked((_uri))) ==
+            keccak256(
+                abi.encodePacked(
+                    (
+                        "https://bafkreibn2ed22zc4h7rhtknra2c5vjjfxtkh7y36nd3mbtd6q6bh5pjs5a.ipfs.nftstorage.link/"
+                    )
+                )
             )
-        );
-        _safeMint(requestToSender[requestId], newId);
-    }
-
-    function getLevel(uint256 tokenId) public view returns (uint256) {
-        return sqrt(characters[tokenId].experience);
-    }
-
-    function getNumberOfCharacters() public view returns (uint256) {
-        return characters.length;
-    }
-
-    function getCharacterOverView(
-        uint256 tokenId
-    ) public view returns (string memory, uint256, uint256, uint256) {
-        return (
-            characters[tokenId].name,
-            characters[tokenId].strength +
-                characters[tokenId].dexterity +
-                characters[tokenId].constitution +
-                characters[tokenId].intelligence +
-                characters[tokenId].wisdom +
-                characters[tokenId].charisma,
-            getLevel(tokenId),
-            characters[tokenId].experience
-        );
-    }
-
-    function getCharacterStats(
-        uint256 tokenId
-    )
-        public
-        view
-        returns (uint256, uint256, uint256, uint256, uint256, uint256, uint256)
-    {
-        return (
-            characters[tokenId].strength,
-            characters[tokenId].dexterity,
-            characters[tokenId].constitution,
-            characters[tokenId].intelligence,
-            characters[tokenId].wisdom,
-            characters[tokenId].charisma,
-            characters[tokenId].experience
-        );
-    }
-
-    function sqrt(uint256 x) internal view returns (uint256 y) {
-        uint256 z = (x + 1) / 2;
-        y = x;
-        while (z < y) {
-            y = z;
-            z = (x / z + z) / 2;
+        ) {
+            return id = 0;
         }
+        return id;
+    }
+
+    // The following functions are overrides required by Solidity.
+    function _update(
+        address to,
+        uint256 tokenId,
+        address auth
+    ) internal override(ERC721, ERC721Enumerable) returns (address) {
+        return super._update(to, tokenId, auth);
+    }
+
+    function _increaseBalance(
+        address account,
+        uint128 value
+    ) internal override(ERC721, ERC721Enumerable) {
+        super._increaseBalance(account, value);
+    }
+
+    function tokenURI(
+        uint256 tokenId
+    ) public view override(ERC721, ERC721URIStorage) returns (string memory) {
+        return super.tokenURI(tokenId);
+    }
+
+    function supportsInterface(
+        bytes4 interfaceId
+    ) public view override(ERC721Enumerable, ERC721URIStorage) returns (bool) {
+        return super.supportsInterface(interfaceId);
     }
 }
