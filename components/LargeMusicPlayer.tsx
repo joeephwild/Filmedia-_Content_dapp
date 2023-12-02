@@ -59,12 +59,21 @@ const LargeMusicPlayer = ({ setIsFullScreen, isFullScreen }: Props) => {
           />
         </View>
 
-        <View className="flex-row items-center py-4 gap-x-[40px]">
+        <View className="flex-row items-center py-2 gap-x-[40px]">
           <Ionicons name="shuffle" size={22} color="#fff" />
           <Ionicons name="play-back" size={22} color="#fff" />
           <Ionicons name="play-circle" size={48} color="#fff" />
           <Ionicons name="play-forward" size={22} color="#fff" />
           <Ionicons name="swap-vertical" size={22} color="#fff" />
+        </View>
+
+        <View className="flex-row px-4 items-center justify-between w-full">
+          <Ionicons name="share" size={22} color="#fff" />
+
+          <View className="flex-row items-center space-x-3">
+            <Ionicons name="heart-outline" size={22} color="#fff" />
+            <Ionicons name="contrast" size={22} color="#fff" />
+          </View>
         </View>
       </View>
     </View>

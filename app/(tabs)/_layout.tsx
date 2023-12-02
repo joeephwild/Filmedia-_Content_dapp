@@ -1,12 +1,19 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Link, Tabs } from "expo-router";
-import { Image, Pressable, Text, View, useColorScheme } from "react-native";
-import React from "react";
+import {
+  Image,
+  KeyboardAvoidingView,
+  Pressable,
+  Text,
+  View,
+  useColorScheme,
+} from "react-native";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TabHeader from "../../components/TabHeader";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MusicPlayer from "../../components/MusicPlayer";
-import { Platform } from 'react-native';
+import { Platform, Keyboard, Animated } from "react-native";
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
@@ -20,9 +27,39 @@ import { Platform } from 'react-native';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const [keyboardHeight, setKeyboardHeight] = useState(new Animated.Value(0));
+
+  useEffect(() => {
+    const keyboardWillShowSub = Keyboard.addListener(
+      "keyboardWillShow",
+      (event) => {
+        Animated.timing(keyboardHeight, {
+          duration: event.duration,
+          toValue: event.endCoordinates.height,
+          useNativeDriver: false,
+        }).start();
+      }
+    );
+
+    const keyboardWillHideSub = Keyboard.addListener(
+      "keyboardWillHide",
+      (event) => {
+        Animated.timing(keyboardHeight, {
+          duration: event.duration,
+          toValue: 0,
+          useNativeDriver: false,
+        }).start();
+      }
+    );
+
+    return () => {
+      keyboardWillShowSub.remove();
+      keyboardWillHideSub.remove();
+    };
+  }, []);
 
   return (
-    <View style={{ flex: 1, flexDirection: 'column-reverse' }}>
+    <View style={{ flex: 1, flexDirection: "column-reverse" }}>
       <Tabs
         initialRouteName="index"
         screenOptions={{
@@ -33,7 +70,7 @@ export default function TabLayout() {
             paddingLeft: 19,
             paddingRight: 19,
             // paddingVertical: 16,
-            height:  Platform.OS === 'ios' ? 100 : 70,
+            height: Platform.OS === "ios" ? 100 : 70,
           },
           tabBarLabelStyle: {
             fontSize: 12,

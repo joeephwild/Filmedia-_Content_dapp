@@ -1,13 +1,15 @@
 import { View, Text, StatusBar, ScrollView, TextInput } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Carousel from "../../components/Carousel";
 import AllSongs from "../../components/expolore/AllSongs";
 import AllAlbums from "../../components/expolore/AllAlbums";
 import AllArtist from "../../components/expolore/AllArtist";
 import AllPodcast from "../../components/expolore/AllPodcast";
+import Search from "../../components/Search";
 
 const explore = () => {
+  const [isInFocus, setIsInFocus] = useState(false);
   return (
     <View className="min-h-screen flex-1">
       <StatusBar barStyle="default" />
@@ -31,16 +33,26 @@ const explore = () => {
               placeholder="Search"
               className="w-full"
               placeholderTextColor={"white"}
+              onFocus={() => setIsInFocus(!isInFocus)}
             />
           </View>
+          {!isInFocus && (
+            <View>
+              <Carousel />
 
-          <Carousel />
+              <AllSongs />
 
-          <AllSongs />
+              <AllAlbums />
+              <AllPodcast />
+              <AllArtist />
+            </View>
+          )}
 
-          <AllAlbums />
-          <AllPodcast />
-          <AllArtist />
+          {isInFocus && (
+            <View className="">
+              <Search />
+            </View>
+          )}
         </View>
       </ScrollView>
     </View>
