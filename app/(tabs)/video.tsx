@@ -128,7 +128,7 @@ const video = () => {
         </TouchableOpacity>
       </View>
       <View
-        style={{flexDirection: "row", flexWrap: "wrap", marginTop: 8}}
+        style={{flexDirection: "row", flexWrap: "wrap", marginTop: 7}}
         className="gap-4 justify-items-start"
       >
         {songs.map((item, index) => (
