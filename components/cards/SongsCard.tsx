@@ -1,6 +1,7 @@
 import { View, Text, Image } from "react-native";
 import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { Link } from "expo-router";
 
 type Props = {
   name: string;
@@ -22,9 +23,9 @@ const SongsCard = ({ artist, image, name, title }: Props) => {
             className="w-[80px] h-[80px] bg-black"
           />
           <View className="">
-            <Text className="text-[#808080] text-[10px] font-semibold">
-              Drake, J.Cole
-            </Text>
+            <Link href={`/artist/${name}`}>
+              <Text className="text-[#fff] text-[16px] font-bold">{name}</Text>
+            </Link>
             <Text className="text-[#fff] text-[14px] font-semibold">
               First Person Shooter
             </Text>

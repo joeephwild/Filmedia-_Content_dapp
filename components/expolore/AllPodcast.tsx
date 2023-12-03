@@ -66,7 +66,7 @@ const AllPodcast = () => {
       >
         {songs.map((item, index) => (
           <View style={{ width: "100%", paddingBottom: 8 }}>
-            <PodcastCard {...item} />
+            <PodcastCard key={index} {...item} />
           </View>
         ))}
       </View>

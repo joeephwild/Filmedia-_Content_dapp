@@ -6,7 +6,7 @@ import SongsCard from "../cards/SongsCard";
 import { ScrollView } from "react-native-gesture-handler";
 import AlbumCard from "../cards/AlbumCard";
 
-const AllAlbums = () => {
+const Albums = () => {
   const songs = [
     {
       name: "Song 1",
@@ -47,9 +47,9 @@ const AllAlbums = () => {
   ];
 
   return (
-    <View className="">
+    <View className="w-full">
       <View className="flex-row items-center justify-between w-full">
-        <Text className="text-[20px] font-bold text-[#fff]">
+        <Text className="text-[20px]  font-bold text-[#fff]">
           Albums made for you
         </Text>
         <View className="flex-row items-center space-x-1">
@@ -57,18 +57,15 @@ const AllAlbums = () => {
           <FontAwesome name="chevron-right" color="#fff" />
         </View>
       </View>
-
-      <RangeComponents />
-
-      <View style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 19 }}>
+      <ScrollView horizontal>
         {songs.map((item, index) => (
-          <View style={{ width: "50%" }}>
-            <AlbumCard key={index} {...item} />
+          <View >
+            <AlbumCard {...item} />
           </View>
         ))}
-      </View>
+      </ScrollView>
     </View>
   );
 };
 
-export default AllAlbums;
+export default Albums;

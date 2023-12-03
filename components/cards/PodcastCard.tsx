@@ -1,5 +1,6 @@
 import { View, Text, Image } from "react-native";
 import React from "react";
+import { Link } from "expo-router";
 
 type Props = {
   name: string;
@@ -18,7 +19,10 @@ const PodcastCard = ({ artist, image, name, title }: Props) => {
         className="w-[80px] h-[85px] bg-white"
       />
       <View className="flex-col items-start pt-7">
-        <Text className="text-[#fff] text-[16px] font-bold">{name}</Text>
+        <Link href={`/artist/${name}`}>
+          <Text className="text-[#fff] text-[16px] font-bold">{name}</Text>
+        </Link>
+
         <Text className="text-[12px] font-bold text-[#808080]">{title}</Text>
       </View>
     </View>

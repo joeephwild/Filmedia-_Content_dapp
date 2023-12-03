@@ -4,9 +4,8 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import RangeComponents from "../RangeComponents";
 import SongsCard from "../cards/SongsCard";
 import { ScrollView } from "react-native-gesture-handler";
-import AlbumCard from "../cards/AlbumCard";
 
-const AllAlbums = () => {
+const TopSongs = () => {
   const songs = [
     {
       name: "Song 1",
@@ -38,37 +37,36 @@ const AllAlbums = () => {
       title: "Jazz Fusion",
       artist: "Artist E",
     },
-    {
-      name: "Song 5",
-      image: "https://example.com/song5_image.jpg",
-      title: "Jazz Fusion",
-      artist: "Artist E",
-    },
   ];
 
   return (
-    <View className="">
+    <View className="w-full mx-4 pt-6">
       <View className="flex-row items-center justify-between w-full">
         <Text className="text-[20px] font-bold text-[#fff]">
-          Albums made for you
+        Top Songs
         </Text>
         <View className="flex-row items-center space-x-1">
           <Text className="text-[12px] font-bold text-[#fff]">More</Text>
           <FontAwesome name="chevron-right" color="#fff" />
         </View>
       </View>
-
-      <RangeComponents />
-
-      <View style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 19 }}>
-        {songs.map((item, index) => (
-          <View style={{ width: "50%" }}>
-            <AlbumCard key={index} {...item} />
-          </View>
-        ))}
-      </View>
+      <ScrollView
+        horizontal
+        style={{
+          flex: 1,
+        }}
+        contentContainerStyle={{
+          flex: 1,
+        }}
+      >
+        <View className="flex-col space-y-6 mt-4 w-full overflow-hidden">
+          {songs.slice(0, 3).map((item, index) => (
+            <SongsCard key={index} {...item} />
+          ))}
+        </View>
+      </ScrollView>
     </View>
   );
 };
 
-export default AllAlbums;
+export default TopSongs;

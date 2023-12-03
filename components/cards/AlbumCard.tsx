@@ -1,5 +1,6 @@
 import { View, Text, Image } from "react-native";
 import React from "react";
+import { Link } from "expo-router";
 
 type Props = {
   name: string;
@@ -21,7 +22,9 @@ const AlbumCard = ({ artist, image, name, title }: Props) => {
         <Text className="text-[14px] font-bold text-[#fff]">1</Text>
         <View>
           <Text className="text-[14px] font-bold text-[#fff]">Timeless</Text>
-          <Text className="text-[10px] font-bold text-[#fff]">Davido</Text>
+          <Link href={`/artist/davido`}>
+            <Text className="text-[10px] font-bold text-[#fff]">Davido</Text>
+          </Link>
         </View>
       </View>
     </View>
