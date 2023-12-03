@@ -44,3 +44,5 @@ export const lib = [
     iconName: "contrast",
   },
 ];
+export const truncate = (text: string, count = 35) =>
+  text?.length > count ? `${text.substring(0, count)}...` : text
