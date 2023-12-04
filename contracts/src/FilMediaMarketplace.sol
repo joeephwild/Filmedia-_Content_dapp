@@ -29,8 +29,12 @@ import {IERC20} from "./interface/IERC20.sol";
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import {AutomationCompatible} from "@chainlink/contracts/src/v0.8/automation/AutomationCompatible.sol";
 import {AutomationCompatibleInterface} from "@chainlink/contracts/src/v0.8/automation/AutomationCompatible.sol";
+import {ISubcriberAnalytics} from "./interface/ISubcriberAnalytics.sol";
 
-contract FilMediaMarketplace is AutomationCompatibleInterface {
+contract FilMediaMarketplace is
+    AutomationCompatibleInterface,
+    ISubcriberAnalytics
+{
     AggregatorV3Interface internal dataFeed;
 
     // Constants for time calculations
@@ -49,14 +53,6 @@ contract FilMediaMarketplace is AutomationCompatibleInterface {
     struct User {
         address userAddress;
         address[] subcribeToAddress; // this is the address he is subcribe to
-    }
-
-    struct SubriberAnalytics {
-        // subcriber analystics
-        uint256 lastPaymentTimestamp;
-        bool currentlySubcribed;
-        address artist;
-        address subcriber;
     }
 
     struct ListMusicNFT {
@@ -89,6 +85,11 @@ contract FilMediaMarketplace is AutomationCompatibleInterface {
     mapping(address user => mapping(address artist => SubriberAnalytics)) userIsSubcribedToAnalystics;
     mapping(address user => mapping(address artist => bool))
         public isSubscribed;
+    //helps get the token id of a user
+    mapping(address user => mapping(address artist => uint256)) public _tokenId;
+    //helps get the month  a user is subcribed
+    mapping(uint256 year => mapping(address user => mapping(address artist => bool)))
+        public monthlySubcriptionBool;
 
     ////////////// EVENTS /////////////////
     event ListedMusicNFT(
@@ -183,6 +184,7 @@ contract FilMediaMarketplace is AutomationCompatibleInterface {
         _aritst.allSubcribers.push(msg.sender);
         _user.subcribeToAddress.push(_artistAddr);
         isSubscribed[msg.sender][_artistAddr] = true;
+        monthlySubcriptionBool[block.timestamp][msg.sender][_artistAddr] = true;
 
         userIsSubcribedToAnalystics[msg.sender][
             _artistAddr
@@ -190,14 +192,16 @@ contract FilMediaMarketplace is AutomationCompatibleInterface {
             lastPaymentTimestamp: block.timestamp,
             artist: _artistAddr,
             subcriber: msg.sender,
-            currentlySubcribed: true
+            currentlySubcribed: true,
+            subcribedDate: block.timestamp
         });
         isSubcribed.push(
             SubriberAnalytics({
                 lastPaymentTimestamp: block.timestamp,
                 artist: _artistAddr,
                 subcriber: msg.sender,
-                currentlySubcribed: true
+                currentlySubcribed: true,
+                subcribedDate: block.timestamp
             })
         );
         emit SubcribedToArtist(msg.sender, _artistAddr, block.chainid);
@@ -216,6 +220,9 @@ contract FilMediaMarketplace is AutomationCompatibleInterface {
         // @state changes
         _currentlySubribed.currentlySubcribed = false;
         isSubscribed[msg.sender][_artistAddr] = false;
+        monthlySubcriptionBool[block.timestamp][msg.sender][
+            _artistAddr
+        ] = false;
 
         emit CanceledSubcription(msg.sender, _artistAddr, block.chainid);
     }
@@ -274,7 +281,13 @@ contract FilMediaMarketplace is AutomationCompatibleInterface {
             if (userBalance >= avaxOneUsd) {
                 userBalance--;
                 _subcribeAnalytics.lastPaymentTimestamp = block.timestamp;
+                monthlySubcriptionBool[block.timestamp][msg.sender][
+                    _artist
+                ] = true;
             } else {
+                monthlySubcriptionBool[block.timestamp][msg.sender][
+                    _artist
+                ] = false;
                 _subcribeAnalytics.currentlySubcribed = false;
                 // userIsSubcribedTo[_lastCheckedAddress] = false;
             }
@@ -292,5 +305,42 @@ contract FilMediaMarketplace is AutomationCompatibleInterface {
         ) = dataFeed.latestRoundData();
         return answer;
     }
+
+    function setTokenId(
+        address subcriberAddress,
+        address artistAddress,
+        uint256 tokenId
+    ) external {
+        // some important chekcs here
+        _tokenId[subcriberAddress][artistAddress] = tokenId;
+    }
+
     //////////////// GETTERS (PURE AND VIEW)/////////////////////////
+    function checkIfUserIsSubcribed(
+        address artistAddr
+    ) external view returns (SubriberAnalytics memory _analytics) {
+        return userIsSubcribedToAnalystics[msg.sender][artistAddr];
+    }
+
+    function getSubcribers()
+        external
+        view
+        returns (SubriberAnalytics[] memory)
+    {
+        return isSubcribed;
+    }
+
+    function getAnalytics(
+        address subcriberAddress,
+        address artistAddress
+    ) external view returns (SubriberAnalytics memory) {
+        return userIsSubcribedToAnalystics[subcriberAddress][artistAddress];
+    }
+
+    function getTokenId(
+        address subcriberAddress,
+        address artistAddress
+    ) external view returns (uint256) {
+        return _tokenId[subcriberAddress][artistAddress];
+    }
 }
