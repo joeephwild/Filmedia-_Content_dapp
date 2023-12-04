@@ -1,0 +1,24 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+
+pragma solidity ^0.8.18;
+
+import {ISubcriberAnalytics} from "./ISubcriberAnalytics.sol";
+
+interface IMarketplace is ISubcriberAnalytics {
+    // Functions
+    function checkIfUserIsSubcribed(
+        address artistAddr
+    ) external view returns (SubriberAnalytics memory _analytics);
+
+    function getSubcribers() external view returns (SubriberAnalytics[] memory);
+
+    function getAnalytics(
+        address subcriberAddress,
+        address artistAddress
+    ) external view returns (SubriberAnalytics memory);
+
+    function getTokenId(
+        address subcriberAddress,
+        address artistAddress
+    ) external view returns (uint256);
+}
