@@ -9,6 +9,7 @@ module.exports = {
     extend: {
       colors: {
         Orange: "#FFA500",
+        overLayGradientBlack: 'linear-gradient(180deg, rgba(1, 1, 1, 0.00) 0%, #010101 100%)'
       },
       backgroundImage: (theme) => ({
         "gradient-radial":
