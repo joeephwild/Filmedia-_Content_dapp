@@ -83,14 +83,14 @@ contract DynamicArtwork is
                 (block.timestamp - analystics.subcribedDate) >
                 THREE_YEAR_SECONDS
             ) {
-                // If the latest block number is even, use one image
+                 // If it has passed three year
                 newImageURI = "https://bafkreidl6qnywykf6p2swigniocenwzkyc432uwrt4ocf5ig7kzduo4hr4.ipfs.nftstorage.link/";
 
                 _setTokenURI(tokenId, newImageURI);
             } else if (
                 (block.timestamp - analystics.subcribedDate) > ONE_YEAR_SECONDS
             ) {
-                // If the latest block number is odd, use another image
+                // If it has passed one year
                 newImageURI = "https://bafkreicxa5zvfzwckqewjd7fdxphwrgwz3awww772nja4fptmjo4nim4ha.ipfs.nftstorage.link/";
                 _setTokenURI(tokenId, newImageURI);
             }
