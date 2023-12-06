@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Modal, Text, TouchableHighlight, View, Alert } from "react-native";
 import SelectOption from "./PaymentSteps/SelectOption";
+import PaymentProcessing from "./PaymentSteps/PaymentProcessing";
+import PaymentAcheieved from "./PaymentSteps/PaymentAcheieved";
 
 type Props = {
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -8,6 +10,37 @@ type Props = {
 };
 
 const PaymentModal = ({ modalVisible, setModalVisible }: Props) => {
+  const [currentStep, setCurrentStep] = useState(0);
+
+  const next = () => {
+    setCurrentStep((prev) => (prev < 3 ? prev + 1 : prev));
+  };
+
+  const prev = () => {
+    setCurrentStep((prev) => (prev > 0 ? prev - 1 : prev));
+  };
+
+  const handldisplay = () => {
+    switch (currentStep) {
+      case 0:
+        return (
+          <SelectOption
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+            handleNext={next}
+          />
+        );
+      case 1:
+        return <PaymentProcessing />;
+
+      case 2:
+        return <PaymentAcheieved />;
+
+      default:
+        break;
+    }
+  };
+
   return (
     <View style={{ marginTop: 22 }}>
       <Modal
@@ -31,10 +64,7 @@ const PaymentModal = ({ modalVisible, setModalVisible }: Props) => {
             borderRadius: 16,
           }}
         >
-          <SelectOption
-            modalVisible={modalVisible}
-            setModalVisible={setModalVisible}
-          />
+          {handldisplay()}
         </View>
       </Modal>
     </View>
