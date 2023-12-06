@@ -3,10 +3,9 @@ import {
   View,
   Text,
   ImageBackground,
-  StyleSheet,
   Dimensions,
-  FlatList,
   Animated,
+  Platform,
 } from "react-native";
 // import Animated from 'react-native-reanimated';
 import { pagesData } from "../utils";
@@ -31,11 +30,13 @@ const Slides = ({
   scrollX,
 }: Props) => {
   const scroll = new Animated.Value(0);
+
+  const ios = Platform.OS === "ios";
   return (
-    <View className="min-h-screen w-[391px] items-center">
+    <View className="min-h-screen w-[409px]">
       <ImageBackground
         source={image}
-        className="h-[393px] w-[393px] object-cover"
+        className="h-[399px] w-[100%] object-cover"
       />
       {/** indicators */}
 
@@ -47,12 +48,17 @@ const Slides = ({
             outputRange: ["#808080", "#4169E1", "#808080"],
             extrapolate: "clamp",
           });
+          const dotWidth = scrollX.interpolate({
+            inputRange,
+            outputRange: [10, 30, 10], // change the width here
+            extrapolate: "clamp",
+          });
           return (
             <Animated.View
               key={i}
               style={{
                 height: 10,
-                width: 10,
+                width: dotWidth,
                 borderRadius: 5,
                 backgroundColor: color,
                 margin: 10,
