@@ -27,13 +27,9 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@chainlink/contracts/src/v0.8/automation/AutomationCompatible.sol";
 import {IMarketplace} from "./interface/IMarketplace.sol";
-import {ISubcriberAnalytics} from "./interface/ISubcriberAnalytics.sol";
+import {IStructs} from "./interface/IStructs.sol";
 
-contract DynamicArtwork is
-    ERC721Enumerable,
-    ERC721URIStorage,
-    ISubcriberAnalytics
-{
+contract DynamicArtwork is ERC721Enumerable, ERC721URIStorage, IStructs {
     uint256 private lastCheckedBlock;
     uint constant ONE_YEAR_SECONDS = 365 days;
     uint constant THREE_YEAR_SECONDS = 730 days;
@@ -52,10 +48,12 @@ contract DynamicArtwork is
         _iMarketplace = IMarketplace(marketplacrAddr);
     }
 
-    function safeMint() public {
+    function safeMint(address artistAddress) public {
+        Artist memory artistStruct = _iMarketplace.getArtistNFTs(artistAddress);
+
         _nextTokenId++;
         _safeMint(msg.sender, _nextTokenId);
-        _setTokenURI(_nextTokenId, ipfsUri[0]);
+        _setTokenURI(_nextTokenId, artistStruct.nfts[0]);
     }
 
     // / @notice Update User NFT
@@ -68,6 +66,11 @@ contract DynamicArtwork is
         for (uint i = 0; i < isSubcribed.length; i++) {
             address artistAddress = isSubcribed[i].artist;
             address subcriberAddress = isSubcribed[i].subcriber;
+
+            Artist memory artistStruct = _iMarketplace.getArtistNFTs(
+                artistAddress
+            );
+
             SubriberAnalytics memory analystics = _iMarketplace.getAnalytics(
                 subcriberAddress,
                 artistAddress
@@ -83,15 +86,15 @@ contract DynamicArtwork is
                 (block.timestamp - analystics.subcribedDate) >
                 THREE_YEAR_SECONDS
             ) {
-                 // If it has passed three year
-                newImageURI = "https://bafkreidl6qnywykf6p2swigniocenwzkyc432uwrt4ocf5ig7kzduo4hr4.ipfs.nftstorage.link/";
-
+                // If it has passed three year
+                newImageURI = artistStruct.nfts[3];
                 _setTokenURI(tokenId, newImageURI);
             } else if (
                 (block.timestamp - analystics.subcribedDate) > ONE_YEAR_SECONDS
             ) {
-                // If it has passed one year
-                newImageURI = "https://bafkreicxa5zvfzwckqewjd7fdxphwrgwz3awww772nja4fptmjo4nim4ha.ipfs.nftstorage.link/";
+
+         // If it has passed one year
+                newImageURI = artistStruct.nfts[2];
                 _setTokenURI(tokenId, newImageURI);
             }
         }

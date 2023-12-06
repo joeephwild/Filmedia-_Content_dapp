@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.18;
 
-import {ISubcriberAnalytics} from "./ISubcriberAnalytics.sol";
+import {IStructs} from "./IStructs.sol";
 
-interface IMarketplace is ISubcriberAnalytics {
+interface IMarketplace is IStructs {
     // Functions
     function checkIfUserIsSubcribed(
         address artistAddr
@@ -21,4 +21,8 @@ interface IMarketplace is ISubcriberAnalytics {
         address subcriberAddress,
         address artistAddress
     ) external view returns (uint256);
+
+    function getArtistNFTs(
+        address artistAddress
+    ) external view returns (Artist memory);
 }
