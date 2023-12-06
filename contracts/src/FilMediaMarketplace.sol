@@ -256,6 +256,12 @@ contract FilMediaMarketplace is AutomationCompatibleInterface, IStructs {
                 subcriberAddress
             ][artistAddress];
 
+            //@checks
+            // check if the user is subcribed if he isnt
+            if (!analystics.currentlySubcribed) {
+                continue;
+            }
+
             if (
                 (block.timestamp - analystics.lastPaymentTimestamp) >
                 ONE_MONTH_SECONDS
@@ -268,7 +274,6 @@ contract FilMediaMarketplace is AutomationCompatibleInterface, IStructs {
                 upkeepNeeded = true;
             }
         }
-        // upkeepNeeded = (block.timestamp - lastTimeStamp) > interval;
     }
 
     function performUpkeep(bytes calldata /* performData */) external override {
@@ -291,13 +296,13 @@ contract FilMediaMarketplace is AutomationCompatibleInterface, IStructs {
             uint256 userBalance = balance[_user];
 
             if (userBalance >= avaxOneUsd) {
-                userBalance--;
+                userBalance -= avaxOneUsd;
                 _subcribeAnalytics.lastPaymentTimestamp = block.timestamp;
                 monthlySubcriptionBool[block.timestamp][_user][_artist] = true;
             } else {
                 monthlySubcriptionBool[block.timestamp][_user][_artist] = false;
                 _subcribeAnalytics.currentlySubcribed = false;
-                // userIsSubcribedTo[_lastCheckedAddress] = false;
+                isSubscribed[_user][_artist] = false;
             }
         }
     }
@@ -320,6 +325,7 @@ contract FilMediaMarketplace is AutomationCompatibleInterface, IStructs {
         uint256 tokenId
     ) external {
         // some important chekcs here
+        // check if the caller is the owner of the NFT
         _tokenId[subcriberAddress][artistAddress] = tokenId;
     }
 
@@ -356,5 +362,26 @@ contract FilMediaMarketplace is AutomationCompatibleInterface, IStructs {
         address artistAddress
     ) external view returns (uint256) {
         return _tokenId[subcriberAddress][artistAddress];
+    }
+
+    function getMusicNFT(
+        uint256 tokenId,
+        address _artistAddr
+    ) external view returns (ListMusicNFT memory) {
+        return _listMusicNfts[_artistAddr][tokenId];
+    }
+
+    function getMusic(uint256 tokenId) external view returns (Music memory) {
+        return music[tokenId];
+    }
+
+    function getArtist(
+        address _artistAddr
+    ) external view returns (Artist memory) {
+        return artist[_artistAddr];
+    }
+
+    function getUser(address _userAddress) external view returns (User memory) {
+        return user[_userAddress];
     }
 }

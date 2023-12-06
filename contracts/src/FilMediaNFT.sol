@@ -37,12 +37,6 @@ contract DynamicArtwork is ERC721Enumerable, ERC721URIStorage, IStructs {
 
     uint256 private _nextTokenId;
 
-    string[] ipfsUri = [
-        "https://bafkreibn2ed22zc4h7rhtknra2c5vjjfxtkh7y36nd3mbtd6q6bh5pjs5a.ipfs.nftstorage.link/",
-        "https://bafkreidl6qnywykf6p2swigniocenwzkyc432uwrt4ocf5ig7kzduo4hr4.ipfs.nftstorage.link/",
-        "https://bafkreicxa5zvfzwckqewjd7fdxphwrgwz3awww772nja4fptmjo4nim4ha.ipfs.nftstorage.link/"
-    ];
-
     constructor(address marketplacrAddr) ERC721("DynamicNft", "DNFT") {
         lastCheckedBlock = block.number; // Initialize with the current block number
         _iMarketplace = IMarketplace(marketplacrAddr);
