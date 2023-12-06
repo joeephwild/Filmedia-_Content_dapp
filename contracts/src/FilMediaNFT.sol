@@ -86,14 +86,14 @@ contract DynamicArtwork is ERC721Enumerable, ERC721URIStorage, IStructs {
                 (block.timestamp - analystics.subcribedDate) >
                 THREE_YEAR_SECONDS
             ) {
-                // If the latest block number is even, use one image
+                // If it has passed three year
                 newImageURI = artistStruct.nfts[3];
-
                 _setTokenURI(tokenId, newImageURI);
             } else if (
                 (block.timestamp - analystics.subcribedDate) > ONE_YEAR_SECONDS
             ) {
-                // If the latest block number is odd, use another image
+
+         // If it has passed one year
                 newImageURI = artistStruct.nfts[2];
                 _setTokenURI(tokenId, newImageURI);
             }

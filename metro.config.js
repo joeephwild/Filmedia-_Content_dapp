@@ -32,7 +32,7 @@ module.exports = (() => {
     sourceExts: [...resolver.sourceExts,"svg"]
   };
 
-  config.isCSSEnabled = false;
+  config.isCSSEnabled = true;
 
 
   return config
