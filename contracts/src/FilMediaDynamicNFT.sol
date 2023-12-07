@@ -29,7 +29,7 @@ import "@chainlink/contracts/src/v0.8/automation/AutomationCompatible.sol";
 import {IMarketplace} from "./interface/IMarketplace.sol";
 import {IStructs} from "./interface/IStructs.sol";
 
-contract DynamicArtwork is ERC721Enumerable, ERC721URIStorage, IStructs {
+contract FilMediaDynamicNFT is ERC721Enumerable, ERC721URIStorage, IStructs {
     uint256 private lastCheckedBlock;
     uint constant ONE_YEAR_SECONDS = 365 days;
     uint constant THREE_YEAR_SECONDS = 730 days;
@@ -86,8 +86,7 @@ contract DynamicArtwork is ERC721Enumerable, ERC721URIStorage, IStructs {
             } else if (
                 (block.timestamp - analystics.subcribedDate) > ONE_YEAR_SECONDS
             ) {
-
-         // If it has passed one year
+                // If it has passed one year
                 newImageURI = artistStruct.nfts[2];
                 _setTokenURI(tokenId, newImageURI);
             }

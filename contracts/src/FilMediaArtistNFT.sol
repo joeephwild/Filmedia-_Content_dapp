@@ -29,7 +29,7 @@ import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 // The contract inherits from the ERC721, ERC721URIStorage, ERC721Burnable, and Ownable contracts.
-contract NFTContract is ERC721, ERC721URIStorage, Ownable(msg.sender) {
+contract FilMediaArtistNFT is ERC721, ERC721URIStorage, Ownable(msg.sender) {
     uint256 private _tokenIdCounter;
 
     // The constructor sets the name and symbol of the token using the ERC721 constructor.

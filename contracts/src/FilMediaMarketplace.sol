@@ -30,22 +30,22 @@ import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/Ag
 import {AutomationCompatible} from "@chainlink/contracts/src/v0.8/automation/AutomationCompatible.sol";
 import {AutomationCompatibleInterface} from "@chainlink/contracts/src/v0.8/automation/AutomationCompatible.sol";
 import {IStructs} from "./interface/IStructs.sol";
+import {IERC721} from "./interface/IERC721.sol";
 
 contract FilMediaMarketplace is AutomationCompatibleInterface, IStructs {
     AggregatorV3Interface internal dataFeed;
 
     // Constants for time calculations
     uint256 constant ONE_MONTH_SECONDS = 30 days;
-    uint256 public counter;
     uint256 public lastTimeStamp;
     SubriberAnalytics[] isSubcribed; // addresses of user subcribed on the platform (to any artist)
     LastChecked lastChecked;
+    bool private locked = false;
 
     /////// STRUCTS ////////
     struct User {
         address userAddress;
         address[] subcribeToAddress; // this is the address he is subcribe to
-        string[3] nfts; // this is the 3 NFT'w owned by an artist
     }
 
     struct ListMusicNFT {
@@ -104,24 +104,39 @@ contract FilMediaMarketplace is AutomationCompatibleInterface, IStructs {
         uint256 chainid
     );
 
-    event ArtistAddedNFTs(address indexed artist, string[] nfts);
+    event ArtistAddedNFTs(address indexed artist, string[3] nfts);
+
+    ////////////// MODIFIERS /////////////////
+
+    modifier nonReentrant() {
+        require(!locked, "Reentrant call");
+        locked = true;
+        _;
+        locked = false;
+    }
 
     /**
-     * Network: Avalanche Testnet
-     * Aggregator: AVAX / USD
-     * Address: 0x5498BB86BC934c8D34FDA08E81D444153d0D06aD
+     * Network: Mumbai Testnet
+     * Aggregator: ETH / USD
+     * Address: 0x0715A7794a1dc8e42615F059dD6e406A6594651A
      */
     constructor() {
         dataFeed = AggregatorV3Interface(
-            0x5498BB86BC934c8D34FDA08E81D444153d0D06aD
+            0x0715A7794a1dc8e42615F059dD6e406A6594651A
         );
         lastTimeStamp = block.timestamp;
-        counter = 0;
     }
+
+    // Function to receive Ether. msg.data must be empty
+    receive() external payable {}
+
+    // Fallback function is called when msg.data is not empty
+    fallback() external payable {}
 
     // @notice For Listing Artist music to the DB
     // @dev this adds the a user to the artist struct
     // @param no params
+    // ✅
     function listNFT(
         address _nft,
         uint256 tokenId,
@@ -131,6 +146,7 @@ contract FilMediaMarketplace is AutomationCompatibleInterface, IStructs {
 
         // @state changes
         _artist.tokenIds.push(tokenId);
+        _artist.artistAddress = _artistAddr;
 
         _listMusicNfts[_artistAddr][tokenId] = ListMusicNFT({
             nft: _nft,
@@ -148,19 +164,24 @@ contract FilMediaMarketplace is AutomationCompatibleInterface, IStructs {
         emit ListedMusicNFT(_nft, tokenId, _artistAddr, block.chainid);
     }
 
-    function addNFTForArtist(address _artistAddr, string[] memory nfts) public {
+    // ✅
+    function addNFTForArtist(
+        address _artistAddr,
+        string[3] memory nfts
+    ) public {
         Artist storage artistStruct = artist[_artistAddr];
 
         //@state changes
-        for (uint i = 0; i < nfts.length; i++) {
+        for (uint i = 0; i < 3; i++) {
             artistStruct.nfts.push(nfts[i]);
         }
 
         emit ArtistAddedNFTs(_artistAddr, nfts);
     }
 
+    // ✅
     function deposit() public payable {
-        (bool success, ) = address(this).call{value: msg.value}("");
+        (bool success, ) = payable(address(this)).call{value: msg.value}("");
         require(success, "Unable to send Avax");
 
         balance[msg.sender] += msg.value;
@@ -168,8 +189,9 @@ contract FilMediaMarketplace is AutomationCompatibleInterface, IStructs {
 
     // @notice For Subcribing to a particular artist
     // @dev this adds the a user to the artist struct
-    // @param no params
-    function subcribeToArtist(address _artistAddr) public payable {
+    // @param  __artistAddr: address of artist
+    // ✅
+    function subcribeToArtist(address _artistAddr) public {
         // @DO's
         // check if a user has enough enough token (up to 1dollar)
         // tranfser the token from the user
@@ -180,17 +202,17 @@ contract FilMediaMarketplace is AutomationCompatibleInterface, IStructs {
         // change user currently subcrib to true
         int answer = getChainlinkDataFeedLatestAnswer();
 
-        uint256 avaxOneUsd = 1e18 / uint256(answer);
+        uint256 oneUSD = 1e18 / uint256(answer);
         uint256 balanceOfUser = balance[msg.sender];
 
         User storage _user = user[msg.sender];
         Artist storage _aritst = artist[_artistAddr];
 
         // @checks
-        require(balanceOfUser >= avaxOneUsd, "Insufficient Balance");
+        require(balanceOfUser >= oneUSD, "Insufficient Balance");
         require(!isSubscribed[msg.sender][_artistAddr], "Already subscribed");
 
-        balanceOfUser -= avaxOneUsd;
+        balanceOfUser -= oneUSD;
 
         // @state changes
         _aritst.allSubcribers.push(msg.sender);
@@ -286,7 +308,7 @@ contract FilMediaMarketplace is AutomationCompatibleInterface, IStructs {
             address _artist = _lastChecked.artistAddress;
             int answer = getChainlinkDataFeedLatestAnswer();
 
-            uint256 avaxOneUsd = 1e18 / uint256(answer);
+            uint256 oneUSD = 1e18 / uint256(answer);
 
             SubriberAnalytics
                 storage _subcribeAnalytics = userIsSubcribedToAnalystics[_user][
@@ -295,8 +317,8 @@ contract FilMediaMarketplace is AutomationCompatibleInterface, IStructs {
 
             uint256 userBalance = balance[_user];
 
-            if (userBalance >= avaxOneUsd) {
-                userBalance -= avaxOneUsd;
+            if (userBalance >= oneUSD) {
+                userBalance -= oneUSD;
                 _subcribeAnalytics.lastPaymentTimestamp = block.timestamp;
                 monthlySubcriptionBool[block.timestamp][_user][_artist] = true;
             } else {
@@ -307,6 +329,7 @@ contract FilMediaMarketplace is AutomationCompatibleInterface, IStructs {
         }
     }
 
+    // ✅
     function getChainlinkDataFeedLatestAnswer() public view returns (int) {
         // prettier-ignore
         (
@@ -322,20 +345,28 @@ contract FilMediaMarketplace is AutomationCompatibleInterface, IStructs {
     function setTokenId(
         address subcriberAddress,
         address artistAddress,
-        uint256 tokenId
+        uint256 tokenId,
+        address _nftAddress
     ) external {
         // some important chekcs here
         // check if the caller is the owner of the NFT
+        require(
+            IERC721(_nftAddress).ownerOf(tokenId) == subcriberAddress,
+            "You are not owner, cant set token id"
+        );
         _tokenId[subcriberAddress][artistAddress] = tokenId;
     }
 
     //////////////// GETTERS (PURE AND VIEW)/////////////////////////
+    // ✅
     function checkIfUserIsSubcribed(
-        address artistAddr
-    ) external view returns (SubriberAnalytics memory _analytics) {
-        return userIsSubcribedToAnalystics[msg.sender][artistAddr];
+        address subcriberAddress,
+        address artistAddress
+    ) external view returns (bool _isSubcribedBool) {
+        return isSubscribed[subcriberAddress][artistAddress];
     }
 
+    // ✅
     function getSubcribers()
         external
         view
@@ -344,17 +375,12 @@ contract FilMediaMarketplace is AutomationCompatibleInterface, IStructs {
         return isSubcribed;
     }
 
+    // ✅
     function getAnalytics(
         address subcriberAddress,
         address artistAddress
     ) external view returns (SubriberAnalytics memory) {
         return userIsSubcribedToAnalystics[subcriberAddress][artistAddress];
-    }
-
-    function getArtistNFTs(
-        address artistAddress
-    ) external view returns (Artist memory) {
-        return artist[artistAddress];
     }
 
     function getTokenId(
@@ -364,6 +390,7 @@ contract FilMediaMarketplace is AutomationCompatibleInterface, IStructs {
         return _tokenId[subcriberAddress][artistAddress];
     }
 
+    // ✅
     function getMusicNFT(
         uint256 tokenId,
         address _artistAddr
@@ -371,10 +398,12 @@ contract FilMediaMarketplace is AutomationCompatibleInterface, IStructs {
         return _listMusicNfts[_artistAddr][tokenId];
     }
 
+    // ✅
     function getMusic(uint256 tokenId) external view returns (Music memory) {
         return music[tokenId];
     }
 
+    // ✅
     function getArtist(
         address _artistAddr
     ) external view returns (Artist memory) {
@@ -383,5 +412,11 @@ contract FilMediaMarketplace is AutomationCompatibleInterface, IStructs {
 
     function getUser(address _userAddress) external view returns (User memory) {
         return user[_userAddress];
+    }
+
+    function getUserBalance(
+        address _userAddress
+    ) external view returns (uint256) {
+        return balance[_userAddress];
     }
 }
