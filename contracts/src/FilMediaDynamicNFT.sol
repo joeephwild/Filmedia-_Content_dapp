@@ -31,8 +31,8 @@ import {IStructs} from "./interface/IStructs.sol";
 
 contract FilMediaDynamicNFT is ERC721Enumerable, ERC721URIStorage, IStructs {
     uint256 private lastCheckedBlock;
-    uint constant ONE_YEAR_SECONDS = 365 days;
-    uint constant THREE_YEAR_SECONDS = 730 days;
+    uint constant ONE_YEAR_SECONDS = 1 minutes; // for testing (is actually 365 days)
+    uint constant THREE_YEAR_SECONDS = 5 minutes; // for testing (is actually 1095 days)
     IMarketplace _iMarketplace;
 
     uint256 private _nextTokenId;
@@ -42,8 +42,19 @@ contract FilMediaDynamicNFT is ERC721Enumerable, ERC721URIStorage, IStructs {
         _iMarketplace = IMarketplace(marketplacrAddr);
     }
 
+    // ✅
     function safeMint(address artistAddress) public {
-        Artist memory artistStruct = _iMarketplace.getArtistNFTs(artistAddress);
+        //@checks
+        // check if a user is subcribed
+        // check if a user has minted for a particular artist
+        bool isSubcribed = _iMarketplace.checkIfUserIsSubcribed(
+            msg.sender,
+            artistAddress
+        );
+        // @checks
+        require(isSubcribed, "You are not subcribed");
+
+        Artist memory artistStruct = _iMarketplace.getArtist(artistAddress);
 
         _nextTokenId++;
         _safeMint(msg.sender, _nextTokenId);
@@ -53,7 +64,8 @@ contract FilMediaDynamicNFT is ERC721Enumerable, ERC721URIStorage, IStructs {
     // / @notice Update User NFT
     // / @dev This checks if one year has passed then update
     // / @param Documents a parameter just like in doxygen (must be followed by parameter name)
-    function updateDynamicImage() internal {
+    // ✅
+    function updateDynamicImage() public {
         // Determine the parity of the latest block number (even or odd)
         SubriberAnalytics[] memory isSubcribed = _iMarketplace.getSubcribers();
 
@@ -61,9 +73,7 @@ contract FilMediaDynamicNFT is ERC721Enumerable, ERC721URIStorage, IStructs {
             address artistAddress = isSubcribed[i].artist;
             address subcriberAddress = isSubcribed[i].subcriber;
 
-            Artist memory artistStruct = _iMarketplace.getArtistNFTs(
-                artistAddress
-            );
+            Artist memory artistStruct = _iMarketplace.getArtist(artistAddress);
 
             SubriberAnalytics memory analystics = _iMarketplace.getAnalytics(
                 subcriberAddress,

@@ -192,14 +192,6 @@ contract FilMediaMarketplace is AutomationCompatibleInterface, IStructs {
     // @param  __artistAddr: address of artist
     // ✅
     function subcribeToArtist(address _artistAddr) public {
-        // @DO's
-        // check if a user has enough enough token (up to 1dollar)
-        // tranfser the token from the user
-        // check if the user is already in the artist subcribers
-        // YES -> SKIP next
-        // NO -> add the user to the artist subcribers
-        // call the chainlink func to call this same function 1 month
-        // change user currently subcrib to true
         int answer = getChainlinkDataFeedLatestAnswer();
 
         uint256 oneUSD = 1e18 / uint256(answer);
@@ -216,9 +208,16 @@ contract FilMediaMarketplace is AutomationCompatibleInterface, IStructs {
 
         // @state changes
         _aritst.allSubcribers.push(msg.sender);
-        _user.subcribeToAddress.push(_artistAddr);
+        _aritst.allSubcribers.push(msg.sender);
         isSubscribed[msg.sender][_artistAddr] = true;
         monthlySubcriptionBool[block.timestamp][msg.sender][_artistAddr] = true;
+
+        if (_user.userAddress == address(0)) {
+            _user.userAddress = msg.sender;
+            _user.subcribeToAddress.push(_artistAddr);
+        } else {
+            _user.subcribeToAddress.push(_artistAddr);
+        }
 
         userIsSubcribedToAnalystics[msg.sender][
             _artistAddr
@@ -241,6 +240,7 @@ contract FilMediaMarketplace is AutomationCompatibleInterface, IStructs {
         emit SubcribedToArtist(msg.sender, _artistAddr, block.chainid);
     }
 
+    // ✅
     function cancelSubcribtion(address _artistAddr) public {
         // @DO's
         // remove the user from the artist address
@@ -342,6 +342,7 @@ contract FilMediaMarketplace is AutomationCompatibleInterface, IStructs {
         return answer;
     }
 
+    // ✅
     function setTokenId(
         address subcriberAddress,
         address artistAddress,
@@ -358,7 +359,6 @@ contract FilMediaMarketplace is AutomationCompatibleInterface, IStructs {
     }
 
     //////////////// GETTERS (PURE AND VIEW)/////////////////////////
-    // ✅
     function checkIfUserIsSubcribed(
         address subcriberAddress,
         address artistAddress
@@ -366,7 +366,6 @@ contract FilMediaMarketplace is AutomationCompatibleInterface, IStructs {
         return isSubscribed[subcriberAddress][artistAddress];
     }
 
-    // ✅
     function getSubcribers()
         external
         view
@@ -375,7 +374,6 @@ contract FilMediaMarketplace is AutomationCompatibleInterface, IStructs {
         return isSubcribed;
     }
 
-    // ✅
     function getAnalytics(
         address subcriberAddress,
         address artistAddress
@@ -390,7 +388,6 @@ contract FilMediaMarketplace is AutomationCompatibleInterface, IStructs {
         return _tokenId[subcriberAddress][artistAddress];
     }
 
-    // ✅
     function getMusicNFT(
         uint256 tokenId,
         address _artistAddr
@@ -398,12 +395,10 @@ contract FilMediaMarketplace is AutomationCompatibleInterface, IStructs {
         return _listMusicNfts[_artistAddr][tokenId];
     }
 
-    // ✅
     function getMusic(uint256 tokenId) external view returns (Music memory) {
         return music[tokenId];
     }
 
-    // ✅
     function getArtist(
         address _artistAddr
     ) external view returns (Artist memory) {

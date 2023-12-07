@@ -22,7 +22,12 @@ interface IMarketplace is IStructs {
         address artistAddress
     ) external view returns (uint256);
 
-    function getArtistNFTs(
+    function getArtist(
         address artistAddress
     ) external view returns (Artist memory);
+
+    function checkIfUserIsSubcribed(
+        address subcriberAddress,
+        address artistAddress
+    ) external view returns (bool _isSubcribedBool);
 }
