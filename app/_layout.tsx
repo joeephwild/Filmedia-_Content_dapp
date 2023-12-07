@@ -9,6 +9,7 @@ import { SplashScreen, Stack } from "expo-router";
 import React from "react";
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
+import { AuthProvider } from "../context/AuthContext";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -51,18 +52,20 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <Stack
-      initialRouteName="index"
-      screenOptions={{
-        contentStyle: {
-          backgroundColor: "#001F3F",
-        },
-        headerShown: false,
-      }}
-    >
-      <Stack.Screen name="index" />
-      <Stack.Screen name="(auth)" options={{ headerShown: false }}  />
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-    </Stack>
+    <AuthProvider>
+      <Stack
+        initialRouteName="index"
+        screenOptions={{
+          contentStyle: {
+            backgroundColor: "#001F3F",
+          },
+          headerShown: false,
+        }}
+      >
+        <Stack.Screen name="index" />
+        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack>
+    </AuthProvider>
   );
 }
