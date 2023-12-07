@@ -7,3 +7,6 @@ checkout and perform upkeep function behaviours
 
 CONTRACT ADDRESSES
 0xeF0f3Ac406aE5879f73e07126d544f126Fb8a3F5 - token
+<!-- 0xeF0f3Ac406aE5879f73e07126d544f126Fb8a3F5 - NFT -->
+<!-- 0xeF0f3Ac406aE5879f73e07126d544f126Fb8a3F5 - MARKETPLACE -->
+<!-- 0xeF0f3Ac406aE5879f73e07126d544f126Fb8a3F5 - NFT Dynamic -->
