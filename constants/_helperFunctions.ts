@@ -16,10 +16,10 @@ let filMediaMarketplaceContract: any,
 
 const connect = async () => {
   const mnemonic: any = await getAccountPhrase();
-  const mnemonicWallet = ethers.Wallet.fromMnemonic(mnemonic);
+  const mnemonicWallet = ethers.Wallet.fromPhrase(mnemonic);
 
   let privateKey = mnemonicWallet.privateKey;
-  const provider = new ethers.providers.JsonRpcProvider(PROVIDER);
+  const provider = new ethers.JsonRpcProvider(PROVIDER);
 
   const signer = new ethers.Wallet(privateKey, provider);
 
@@ -88,7 +88,7 @@ export const _addNFTForArtist = async ({
 // Function to interact with the "deposit" Solidity function
 export const _deposit = async ({ value }: { value: string }): Promise<void> => {
   try {
-    const valueToSend = ethers.utils.parseEther(value); // Replace '1' with the desired amount in ETH
+    const valueToSend = ethers.parseEther(value); // Replace '1' with the desired amount in ETH
     const tx = await filMediaMarketplaceContract.deposit({
       value: valueToSend,
     });
@@ -175,7 +175,7 @@ export const _checkIfUserIsSubcribed = async ({
 };
 
 // Function to interact with the "getSubcribers" Solidity function
-export const getSubcribers = async (): Promise<SubriberAnalytics[]> => {
+export const getSubcribers = async (): Promise<any> => {
   try {
     const subcribers = await filMediaMarketplaceContract.getSubcribers();
     return subcribers;
@@ -186,13 +186,13 @@ export const getSubcribers = async (): Promise<SubriberAnalytics[]> => {
 };
 
 // Function to interact with the "getAnalytics" Solidity function
-const _getAnalytics = async ({
+export const _getAnalytics = async ({
   subcriberAddress,
   artistAddress,
 }: {
   subcriberAddress: string;
   artistAddress: string;
-}): Promise<SubriberAnalytics> => {
+}): Promise<any> => {
   try {
     const analytics = await filMediaMarketplaceContract.getAnalytics(
       subcriberAddress,
@@ -201,12 +201,11 @@ const _getAnalytics = async ({
     return analytics;
   } catch (error) {
     console.error("Error calling getAnalytics:", error);
-    return {} as SubriberAnalytics;
   }
 };
 
 // Function to interact with the "getTokenId" Solidity function
-const _getTokenId = async ({
+export const _getTokenId = async ({
   subcriberAddress,
   artistAddress,
 }: {
@@ -226,13 +225,13 @@ const _getTokenId = async ({
 };
 
 // Function to interact with the "getMusicNFT" Solidity function
-const _getMusicNFT = async ({
+export const _getMusicNFT = async ({
   tokenId,
   artistAddress,
 }: {
   tokenId: number;
   artistAddress: string;
-}): Promise<ListMusicNFT> => {
+}): Promise<any> => {
   try {
     const musicNFT = await filMediaMarketplaceContract.getMusicNFT(
       tokenId,
@@ -241,27 +240,29 @@ const _getMusicNFT = async ({
     return musicNFT;
   } catch (error) {
     console.error("Error calling getMusicNFT:", error);
-    return {} as ListMusicNFT;
   }
 };
 
 // Function to interact with the "getMusic" Solidity function
-const _getMusic = async ({ tokenId }: { tokenId: number }): Promise<Music> => {
+export const _getMusic = async ({
+  tokenId,
+}: {
+  tokenId: number;
+}): Promise<any> => {
   try {
     const musicInfo = await filMediaMarketplaceContract.getMusic(tokenId);
     return musicInfo;
   } catch (error) {
     console.error("Error calling getMusic:", error);
-    return {} as Music;
   }
 };
 
 // Function to interact with the "getArtist" Solidity function
-const _getArtist = async ({
+export const _getArtist = async ({
   artistAddress,
 }: {
   artistAddress: string;
-}): Promise<Artist> => {
+}): Promise<any> => {
   try {
     const artistInfo = await filMediaMarketplaceContract.getArtist(
       artistAddress
@@ -269,27 +270,25 @@ const _getArtist = async ({
     return artistInfo;
   } catch (error) {
     console.error("Error calling getArtist:", error);
-    return {} as Artist;
   }
 };
 
 // Function to interact with the "getUser" Solidity function
-const _getUser = async ({
+export const _getUser = async ({
   userAddress,
 }: {
   userAddress: string;
-}): Promise<User> => {
+}): Promise<any> => {
   try {
     const userInfo = await filMediaMarketplaceContract.getUser(userAddress);
     return userInfo;
   } catch (error) {
     console.error("Error calling getUser:", error);
-    return {} as User;
   }
 };
 
 // Function to interact with the "getUserBalance" Solidity function
-const _getUserBalance = async ({
+export const _getUserBalance = async ({
   userAddress,
 }: {
   userAddress: string;

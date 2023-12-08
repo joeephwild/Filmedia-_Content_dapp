@@ -7,11 +7,13 @@ import {
   FlatList,
   Animated,
   Pressable,
+  StatusBar,
 } from "react-native";
 import React, { useRef, useState } from "react";
 import Onboarding from "react-native-onboarding-swiper";
 import { pagesData } from "../utils";
 import Slides from "../components/Slides";
+import { router } from "expo-router";
 
 const { width, height } = Dimensions.get("window");
 
@@ -39,6 +41,7 @@ const OnboardingPage = () => {
     } else {
       // Handle reaching the end of the onboarding slides
       // You can navigate to the next screen or perform any other action
+      router.push("/(auth)");
     }
   };
 
@@ -52,6 +55,7 @@ const OnboardingPage = () => {
 
   return (
     <View className="flex-1 items-center justify-center">
+      <StatusBar barStyle="light-content" />
       <FlatList
         ref={flatListRef}
         data={pagesData}
@@ -61,7 +65,7 @@ const OnboardingPage = () => {
         scrollEventThrottle={16}
         onMomentumScrollEnd={(ev) => {
           const newIndex = Math.round(ev.nativeEvent.contentOffset.x / width);
-          console.log(newIndex)
+          console.log(newIndex);
           setCurrentIndex(newIndex);
         }}
         showsHorizontalScrollIndicator={false}
