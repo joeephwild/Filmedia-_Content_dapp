@@ -7,9 +7,11 @@ import AllAlbums from "../../components/expolore/AllAlbums";
 import AllArtist from "../../components/expolore/AllArtist";
 import AllPodcast from "../../components/expolore/AllPodcast";
 import Search from "../../components/Search";
+import { useAuth } from "../../context/AuthContext";
 
 const explore = () => {
   const [isInFocus, setIsInFocus] = useState(false);
+  const { permanentlyDeleteAccount } = useAuth();
   return (
     <View className="min-h-screen flex-1">
       <StatusBar barStyle="default" />
@@ -28,12 +30,17 @@ const explore = () => {
       >
         <View>
           <View className="bg-white/25 w-full h-[48px] space-x-6 px-5 flex-row items-center rounded-[80px]">
-            <FontAwesome name="search" size={24} color="white" />
+            <FontAwesome
+              onPress={permanentlyDeleteAccount}
+              name="search"
+              size={24}
+              color="white"
+            />
             <TextInput
               placeholder="Search"
               className="w-full"
               placeholderTextColor={"white"}
-              onFocus={() => setIsInFocus(!isInFocus)}
+              // onFocus={() => setIsInFocus(!isInFocus)}
             />
           </View>
           {!isInFocus && (

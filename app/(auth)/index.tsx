@@ -22,7 +22,7 @@ const index = () => {
       case 0:
         return <SignUp setCurrentScreen={setCurrentScreen} />;
       case 1:
-        return <Login />;
+        return <Login setCurrentScreen={setCurrentScreen} />;
       default:
         break;
     }

@@ -16,7 +16,7 @@ export const InputField: React.FC<InputFieldProps> = ({
 }) => {
   return (
     <View className="items-start space-y-2 mb-[24px]">
-      <Text className="text-[#fff] text-[10px] font-normal">{label}</Text>
+      <Text className="text-[#fff] text-[14px] font-normal">{label}</Text>
       <TextInput
         placeholder={placeholder}
         value={value}
