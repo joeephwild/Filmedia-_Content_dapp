@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "klayver_frontend",
-    "slug": "klayver_frontend",
+    "slug": "filmedia",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -34,6 +34,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "39ae1544-7672-499a-a01c-99cbf3e9c4bc"
+      }
+    },
+    "owner": "jayden2322"
   }
 }
