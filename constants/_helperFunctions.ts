@@ -16,10 +16,10 @@ let filMediaMarketplaceContract: any,
 
 const connect = async () => {
   const mnemonic: any = await getAccountPhrase();
-  const mnemonicWallet = ethers.Wallet.fromMnemonic(mnemonic);
+  const mnemonicWallet = ethers.Wallet.fromPhrase(mnemonic);
 
   let privateKey = mnemonicWallet.privateKey;
-  const provider = new ethers.providers.JsonRpcProvider(PROVIDER);
+  const provider = new ethers.JsonRpcProvider(PROVIDER);
 
   const signer = new ethers.Wallet(privateKey, provider);
 
@@ -88,7 +88,7 @@ export const _addNFTForArtist = async ({
 // Function to interact with the "deposit" Solidity function
 export const _deposit = async ({ value }: { value: string }): Promise<void> => {
   try {
-    const valueToSend = ethers.utils.parseEther(value); // Replace '1' with the desired amount in ETH
+    const valueToSend = ethers.parseEther(value); // Replace '1' with the desired amount in ETH
     const tx = await filMediaMarketplaceContract.deposit({
       value: valueToSend,
     });
