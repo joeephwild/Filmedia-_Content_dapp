@@ -31,7 +31,7 @@ const explore = () => {
         <View>
           <View className="bg-white/25 w-full h-[48px] space-x-6 px-5 flex-row items-center rounded-[80px]">
             <FontAwesome
-              onPress={permanentlyDeleteAccount}
+              // onPress={permanentlyDeleteAccount}
               name="search"
               size={24}
               color="white"

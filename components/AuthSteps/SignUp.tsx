@@ -25,7 +25,7 @@ const SignUp = ({ setCurrentScreen }: Props) => {
   const handleSubmit = async () => {
     if (!name || !email || !password || password !== confirmPassword)
       return Alert.alert("Fill up needed data");
-    createAnEOA(email, password);
+    createAnEOA(name, email, password);
   };
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -49,21 +49,21 @@ const SignUp = ({ setCurrentScreen }: Props) => {
           />
           <InputField
             label="E-mail"
-            value={name}
+            value={email}
             placeholder="example@gmail.com"
-            onChange={setName}
+            onChange={setEmail}
           />
           <InputField
             label="Password"
-            value={name}
+            value={password}
             placeholder="*********"
-            onChange={setName}
+            onChange={setPassword}
           />
           <InputField
             label="Confirm Password"
-            value={name}
+            value={confirmPassword}
             placeholder="*********"
-            onChange={setName}
+            onChange={setConfirmPassword}
           />
         </View>
 

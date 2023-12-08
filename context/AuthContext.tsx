@@ -14,6 +14,11 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth } from "../firebase";
+import { LensClient, development } from "@lens-protocol/client";
+
+export const lensClient = new LensClient({
+  environment: development,
+});
 
 type Session = string | undefined;
 
@@ -135,6 +140,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const retrieveAccount = async () => {
       const account = await getAccount();
       setSession(account);
+      router.push("/(tabs)");
     };
 
     retrieveAccount();
