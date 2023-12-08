@@ -48,4 +48,4 @@ ifeq ($(findstring --network polygon,,$(ARGS)),--network polygon)
 endif
 
 deploy:
-	@forge script script/FILE_NAME.s.sol:NAME_OF_CONTRACT $(NETWORK_ARGS)
+	@forge script script/DeployFilMedia.s.sol:DeployFilMediaMarketplace $(NETWORK_ARGS)
