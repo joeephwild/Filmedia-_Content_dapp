@@ -14,16 +14,10 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth } from "../firebase";
-<<<<<<< HEAD
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LensClient, development, isRelaySuccess } from "@lens-protocol/client";
 
 const lensClient = new LensClient({
-=======
-import { LensClient, development } from "@lens-protocol/client";
-
-export const lensClient = new LensClient({
->>>>>>> 627d239580b3f3b02bf99f9def94090fe1ad2a1c
   environment: development,
 });
 
