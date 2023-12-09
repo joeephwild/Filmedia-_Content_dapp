@@ -370,10 +370,10 @@ export const _safeMintArtist = async ({
 export const _getTokenUriArtist = async ({
   tokenId,
 }: {
-  tokenId: string;
+  tokenId: number;
 }): Promise<string> => {
   try {
-    const uri: any = await artistNFTContract.getTokenUri(tokenId);
+    const uri: any = await artistNFTContract.tokenURI(Number(tokenId));
     console.log("Token URI:", uri);
 
     return uri;
