@@ -6,6 +6,7 @@ interface InputFieldProps {
   value: string;
   onChange: (text: string) => void;
   placeholder: string;
+  name: string;
 }
 
 export const InputField: React.FC<InputFieldProps> = ({
@@ -13,6 +14,7 @@ export const InputField: React.FC<InputFieldProps> = ({
   value,
   onChange,
   placeholder,
+  name,
 }) => {
   return (
     <View className="items-start space-y-2 mb-[24px]">

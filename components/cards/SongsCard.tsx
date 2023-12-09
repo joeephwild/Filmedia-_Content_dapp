@@ -2,15 +2,24 @@ import { View, Text, Image } from "react-native";
 import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Link } from "expo-router";
+import useGetNFTs from "../../constants/hooks/useGetNFT";
+import { artistNFTAddress } from "../../constants/addresses";
 
 type Props = {
   name: string;
   image: string;
   title: string;
   artist: string;
+  tokenId: string;
 };
 
-const SongsCard = ({ artist, image, name, title }: Props) => {
+const SongsCard = ({ artist, image, name, title, tokenId }: Props) => {
+  const [imageURI, tokenName, tokenDescription, category] = useGetNFTs(
+    tokenId,
+    artistNFTAddress
+  );
+
+  console.log(imageURI);
   return (
     <View className="flex-row items-center space-x-2 w-full pb-4">
       <Text className="border-y text-[#fff] border-[#fff]">1</Text>

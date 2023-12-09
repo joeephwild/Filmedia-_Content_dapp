@@ -14,9 +14,16 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth } from "../firebase";
+<<<<<<< HEAD
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LensClient, development, isRelaySuccess } from "@lens-protocol/client";
+
+const lensClient = new LensClient({
+=======
 import { LensClient, development } from "@lens-protocol/client";
 
 export const lensClient = new LensClient({
+>>>>>>> 627d239580b3f3b02bf99f9def94090fe1ad2a1c
   environment: development,
 });
 
@@ -62,13 +69,12 @@ function useProtectedRoute(session: Session) {
   const segments = useSegments();
 
   useEffect(() => {
-    const inAuthGroup = segments[0] === "(auth)";
-
-    if (!session && !inAuthGroup) {
-      router.replace("/");
-    } else if (session && inAuthGroup) {
-      router.replace("/(tabs)");
-    }
+    // const inAuthGroup = segments[0] === "(auth)";
+    // if (!session && !inAuthGroup) {
+    //   router.replace("/");
+    // } else if (session && inAuthGroup) {
+    //   router.replace("/(tabs)");
+    // }
   }, [session, segments]);
 }
 
@@ -81,59 +87,67 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [session, setSession] = useState<Session>();
   const [user, setUser] = useState<FirebaseAuthUser | null>(null);
   console.log("user", session);
-  useProtectedRoute(session);
+  // useProtectedRoute(session);
 
   const createAnEOA = async (name: string, email: string, password: string) => {
-    if (session) {
-      Alert.alert("You already have an account");
-      return;
-    }
+    // if (session) {
+    //   Alert.alert("You already have an account");
+    //   return;
+    // }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
-      setUser(user);
+      let accountAddress: string | undefined = await getAccount();
 
-      try {
-        await updateProfile(user, { displayName: name });
-        console.log("update successful");
-      } catch (error) {
-        console.log("error updating profile", error);
+      if (!accountAddress) {
+        accountAddress = await createAccount();
       }
 
-      try {
-        const newAccount = await createAccount();
-        setSession(newAccount);
-        if (newAccount) {
-          router.push("/(tabs)");
-        }
-      } catch (error) {
-        Alert.alert("Error creating a new account");
-        console.error(error);
+      const user = {
+        name,
+        password,
+        walletAddress: accountAddress,
+      };
+      console.log(user);
+      await AsyncStorage.setItem("user", JSON.stringify(user));
+
+      const profileCreateResult = await lensClient.profile.create({
+        handle: name,
+        to: accountAddress,
+      });
+
+      // profileCreateResult is a Result object
+      const profileCreateResultValue = profileCreateResult;
+
+      if (!profileCreateResultValue) {
+        Alert.alert(`Something went wrong`, profileCreateResultValue);
+        return;
+      }
+      if (accountAddress && profileCreateResult) {
+        router.push("/(tabs)");
       }
     } catch (error) {
-      Alert.alert("Error signing up");
+      Alert.alert("Error creating a new account");
       console.error(error);
     }
   };
 
   const signin = async (email: string, password: string) => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        // ...
-        setUser(user);
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        Alert.alert(errorMessage);
-      });
+    // Signed in
+    const user: string | null = await AsyncStorage.getItem("user");
+
+    if (user != null) {
+      const parseUser = JSON.parse(user);
+      if (parseUser.password != password) {
+        Alert.alert("Password is not correct");
+        console.error("Password is not correct");
+      } else {
+        // User is null
+        // Handle the case where the user is not found
+        router.push("/(tabs)");
+      }
+    } else {
+      console.error("User not found");
+    }
   };
 
   useEffect(() => {
