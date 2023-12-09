@@ -53,30 +53,21 @@ const SignUp = ({ setCurrentScreen }: Props) => {
             value={email}
             placeholder="example@gmail.com"
             onChange={setEmail}
-<<<<<<< HEAD
             name=""
-=======
->>>>>>> 627d239580b3f3b02bf99f9def94090fe1ad2a1c
           />
           <InputField
             label="Password"
             value={password}
             placeholder="*********"
             onChange={setPassword}
-<<<<<<< HEAD
             name=""
-=======
->>>>>>> 627d239580b3f3b02bf99f9def94090fe1ad2a1c
           />
           <InputField
             label="Confirm Password"
             value={confirmPassword}
             placeholder="*********"
             onChange={setConfirmPassword}
-<<<<<<< HEAD
             name=""
-=======
->>>>>>> 627d239580b3f3b02bf99f9def94090fe1ad2a1c
           />
         </View>
 
