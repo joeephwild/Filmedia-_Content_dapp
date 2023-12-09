@@ -16,15 +16,15 @@ type Props = {
 
 const Login = ({ setCurrentScreen }: Props) => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("")
+  const [password, setPassword] = useState("");
 
   const { signin } = useAuth();
 
-  const handleSubmit = async() => {
-    if(!email || !password) return Alert.alert("fil up data");
+  const handleSubmit = async () => {
+    if (!email || !password) return Alert.alert("fil up data");
 
-    await signin(email,password);
-  }
+    await signin(email, password);
+  };
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View className="items-center mt-[87px] space-y-[24px]">
@@ -44,17 +44,22 @@ const Login = ({ setCurrentScreen }: Props) => {
             value={email}
             placeholder="example@gmail.com"
             onChange={setEmail}
+            name=""
           />
           <InputField
             label="Password"
             value={password}
             placeholder="*********"
             onChange={setPassword}
+            name=""
           />
         </View>
 
         <View className="space-y-[8px] pt-[216px]">
-          <TouchableOpacity onPress={handleSubmit} className="py-[16px] px-[40px] items-center bg-[#4169E1] rounded-[40px]">
+          <TouchableOpacity
+            onPress={handleSubmit}
+            className="py-[16px] px-[40px] items-center bg-[#4169E1] rounded-[40px]"
+          >
             <Text className="text-[14px] font-bold text-[#fff]">Log In</Text>
           </TouchableOpacity>
           <Text className="text-[14px] text-[#fff] font-bold text-center">

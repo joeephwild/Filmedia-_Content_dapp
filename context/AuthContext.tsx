@@ -129,7 +129,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     // Signed in
     const user: string | null = await AsyncStorage.getItem("user");
 
-    if (user != null) {
+    if (user != undefined) {
       const parseUser = JSON.parse(user);
       if (parseUser.password != password) {
         Alert.alert("Password is not correct");
@@ -140,18 +140,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
         router.push("/(tabs)");
       }
     } else {
-      console.error("User not found");
+      Alert.alert("Error creating a new account");
     }
   };
 
   useEffect(() => {
-    const retrieveAccount = async () => {
-      const account = await getAccount();
-      setSession(account);
-      router.push("/(tabs)");
-    };
-
-    retrieveAccount();
+    // const retrieveAccount = async () => {
+    //   const account = await getAccount();
+    //   setSession(account);
+    //   router.push("/(tabs)");
+    // };
+    // retrieveAccount();
   }, [session]);
 
   const contextValue: AuthContextValue = {

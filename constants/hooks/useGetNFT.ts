@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { _getTokenUriArtist } from "../_helperFunctions";
 
-const useGetNFTs = (tokenId: string, nft: any) => {
+const useGetNFTs = (tokenId: number, nft: any) => {
   const [imageURI, setImageURI] = useState("");
   const [tokenName, setTokenName] = useState("");
   const [tokenDescription, setTokenDescription] = useState("");
@@ -10,7 +10,7 @@ const useGetNFTs = (tokenId: string, nft: any) => {
   async function updateUI() {
     console.log(tokenId, " thsususuuuuuuuuuuuuuuuuuuu");
     const tokenURI: string | null = await _getTokenUriArtist({
-      tokenId: tokenId.toString(),
+      tokenId: tokenId,
     });
 
     console.log(`The TokenURI is ${tokenURI}`);
