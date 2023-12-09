@@ -17,7 +17,10 @@
     "@expo/vector-icons": "^13.0.0",
     "@gorhom/bottom-sheet": "4",
     "@lens-protocol/client": "^2.0.0-alpha.25",
+<<<<<<< HEAD
     "@react-native-async-storage/async-storage": "^1.18.2",
+=======
+>>>>>>> 627d239580b3f3b02bf99f9def94090fe1ad2a1c
     "@react-native-community/slider": "4.4.2",
     "@react-native-picker/picker": "2.4.10",
     "@react-navigation/native": "^6.0.2",

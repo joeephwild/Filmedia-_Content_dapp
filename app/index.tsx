@@ -9,8 +9,8 @@ import {
   Pressable,
   StatusBar,
 } from "react-native";
-import React, { useRef, useState } from "react";
-import Onboarding from "react-native-onboarding-swiper";
+import React, { useEffect, useRef, useState } from "react";
+import * as SecureStore from 'expo-secure-store';
 import { pagesData } from "../utils";
 import Slides from "../components/Slides";
 import { router } from "expo-router";
@@ -19,6 +19,18 @@ const { width, height } = Dimensions.get("window");
 
 const OnboardingPage = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  // const [isFirstLaunch, setIsFirstLaunch] = React.useState(false);
+
+  // useEffect(() => {
+  //   SecureStore.getItemAsync('alreadyLaunched').then(value => {
+  //     if (value == null) {
+  //       SecureStore.setItemAsync('alreadyLaunched', 'true'); // No need to wait for 'setItem' to finish, this is a ~hack
+  //       setIsFirstLaunch(true);
+  //     } else {
+  //       setIsFirstLaunch(false);
+  //     }
+  //   }); // Add some error handling, also you can simply do setIsFirstLaunch(null)
+  // }, []);
 
   const scrollX = new Animated.Value(0);
 
