@@ -1,18 +1,13 @@
 import { gql } from "@apollo/client";
 
-const GET_ACTIVE_ITEMS = gql`
+const GET_LISTED_NFTS = gql`
   {
-    activeItems(
-      first: 5
-      where: { buyer: "0x0000000000000000000000000000000000000000" }
-    ) {
+    listedMusicNFTs(first: 5) {
       id
-      buyer
-      seller
-      nftAddress
+      artist
+      chainid
       tokenId
-      price
     }
   }
 `;
-export default GET_ACTIVE_ITEMS;
+export default GET_LISTED_NFTS;

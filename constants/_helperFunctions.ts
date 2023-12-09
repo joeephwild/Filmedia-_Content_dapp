@@ -9,6 +9,8 @@ import filMediaMarketplaceAbi from "./abis/FilMediaMarketplace.json";
 import dynamicNftAbi from "./abis/FilMediaDynamicNFTAbi.json";
 import artistNFTAbi from "./abis/FilMediaArtistNFTAbi.json";
 import { getAccountPhrase } from "@rly-network/mobile-sdk";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Alert } from "react-native";
 
 let filMediaMarketplaceContract: any,
   dynamicNftContract: any,
@@ -51,7 +53,7 @@ export const _listNFT = async ({
   _nft: string;
   tokenId: number;
   _artistAddr: string;
-}): Promise<void> => {
+}): Promise<boolean> => {
   try {
     const tx = await filMediaMarketplaceContract.listNFT(
       _nft,
@@ -60,8 +62,11 @@ export const _listNFT = async ({
     );
     await tx.wait();
     console.log("Transaction successful:", tx.hash);
+
+    return true;
   } catch (error) {
     console.error("Error listing NFT:", error);
+    return false;
   }
 };
 
@@ -365,22 +370,48 @@ export const _safeMintArtist = async ({
 export const _getTokenUriArtist = async ({
   tokenId,
 }: {
-  tokenId: number;
-}): Promise<void> => {
+  tokenId: string;
+}): Promise<string> => {
   try {
-    const uri = await artistNFTContract.tokenURI(tokenId);
+    const uri: any = await artistNFTContract.getTokenUri(tokenId);
     console.log("Token URI:", uri);
+
+    return uri;
   } catch (error) {
     console.error("Error calling getTokenUri:", error);
+    return "Unable to get URI for artist";
   }
 };
 
 // Function to interact with the "getTokenId" Solidity function
-export const _getTokenIdArtist = async (): Promise<void> => {
+export const _getTokenIdArtist = async (): Promise<any> => {
   try {
     const tokenId = await artistNFTContract.getCurrentTokenId();
     console.log("Token ID:", tokenId);
+
+    return tokenId;
   } catch (error) {
     console.error("Error calling getTokenId:", error);
+  }
+};
+
+/////////// OTHER FUNCTIONS////////////////
+export const _getWalletAddress = async (): Promise<string> => {
+  try {
+    const user: string | null = await AsyncStorage.getItem("user");
+    let walletAddress: string;
+
+    if (user != null) {
+      const parseUser = JSON.parse(user);
+      walletAddress = parseUser.walletAddress;
+    } else {
+      Alert.alert("User Not found");
+      walletAddress = "0x0000000000000000000000000000";
+    }
+    return walletAddress;
+  } catch (error) {
+    Alert.alert("User");
+
+    return "Something went wrong";
   }
 };

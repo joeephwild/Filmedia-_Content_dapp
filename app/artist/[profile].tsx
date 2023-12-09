@@ -8,9 +8,14 @@ import TopSongs from "../../components/profile/TopSongs";
 import Albums from "../../components/profile/Albums";
 import { SafeAreaView } from "react-native-safe-area-context";
 import PaymentModal from "../../components/PaymentModal";
+import { router } from "expo-router";
 
 const ArtistProfile = () => {
   const [modalVisible, setModalVisible] = useState(false);
+
+  const uploadContent = () => {
+    router.push("/upload");
+  };
   return (
     <ScrollView
       style={{ flex: 1, minHeight: "100%", marginBottom: 789 }}
@@ -47,24 +52,42 @@ const ArtistProfile = () => {
             Subscribers 3.7M
           </Text>
         </View>
-        <TouchableOpacity
-          onPress={() => setModalVisible(true)}
-          style={{
-            marginTop: 29,
-            paddingHorizontal: 24,
-            backgroundColor: "#4169E1",
-            paddingVertical: 8,
-            alignItems: "center",
-            justifyContent: "center",
-            width: "40%",
-            borderRadius: 40,
-          }}
-          className="mx-auto"
-        >
-          <Text style={{ fontSize: 12, fontWeight: "bold", color: "#fff" }}>
-            Subscribe for $5
-          </Text>
-        </TouchableOpacity>
+        <View style={{ flexDirection: "row", justifyContent: "center" }}>
+          <TouchableOpacity
+            onPress={() => setModalVisible(true)}
+            style={{
+              marginTop: 29,
+              paddingHorizontal: 24,
+              backgroundColor: "#4169E1",
+              paddingVertical: 8,
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: 40,
+            }}
+            className="mx-auto mr-4"
+          >
+            <Text style={{ fontSize: 12, fontWeight: "bold", color: "#fff" }}>
+              Subscribe for $5
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => uploadContent()}
+            style={{
+              marginTop: 29,
+              paddingHorizontal: 24,
+              backgroundColor: "#4169E1",
+              paddingVertical: 8,
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: 40,
+            }}
+            className="mx-auto"
+          >
+            <Text style={{ fontSize: 12, fontWeight: "bold", color: "#fff" }}>
+              Upload Content
+            </Text>
+          </TouchableOpacity>
+        </View>
 
         <View style={{ paddingTop: 9 }}>
           <SubscriptionHeatmap />

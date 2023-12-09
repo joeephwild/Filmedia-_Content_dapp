@@ -21,7 +21,9 @@ const Login = ({ setCurrentScreen }: Props) => {
   const { signin } = useAuth();
 
   const handleSubmit = async() => {
-    if(!email || !password) return Alert.alert("fil up data")
+    if(!email || !password) return Alert.alert("fil up data");
+
+    await signin(email,password);
   }
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -45,9 +47,9 @@ const Login = ({ setCurrentScreen }: Props) => {
           />
           <InputField
             label="Password"
-            value={email}
+            value={password}
             placeholder="*********"
-            onChange={setEmail}
+            onChange={setPassword}
           />
         </View>
 
