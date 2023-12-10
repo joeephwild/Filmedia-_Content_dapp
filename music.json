@@ -1,0 +1,23 @@
+{
+  "description": "This is a song by ayra star",
+  "external_url": "",
+  "image": "https://gateway.pinata.cloud/ipfs/QmQsPcQNUEQgo5wMMtz6aFN5YrVXR6bqnzyshk2ZUpuD94",
+  "name": "ayra starr- Rush",
+  "attributes": [
+    {
+      "display_type": "string",
+      "trait_type": "Base",
+      "value": "Starfish"
+    },
+    {
+      "display_type": "number",
+      "trait_type": "Level",
+      "value": 5
+    },
+    {
+      "display_type": "string",
+      "trait_type": "Personality",
+      "value": "Sad"
+    }
+  ]
+}

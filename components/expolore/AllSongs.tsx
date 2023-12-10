@@ -4,6 +4,9 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import RangeComponents from "../RangeComponents";
 import SongsCard from "../cards/SongsCard";
 import { ScrollView } from "react-native-gesture-handler";
+import { ApolloProvider, useQuery } from "@apollo/client";
+import { client } from "../../constants/addresses";
+import GET_LISTED_NFTS from "../../constants/subgraphQueries";
 
 const AllSongs = () => {
   const songs = [
@@ -40,6 +43,16 @@ const AllSongs = () => {
   ];
 
   return (
+    <ApolloProvider client={client}>
+      <Music />
+    </ApolloProvider>
+  );
+};
+
+const Music = () => {
+  const { loading, error, data: listedNfts } = useQuery(GET_LISTED_NFTS);
+
+  return (
     <View className="w-full">
       <View className="flex-row items-center justify-between w-full">
         <Text className="text-[20px] font-bold text-[#fff]">
@@ -63,9 +76,11 @@ const AllSongs = () => {
         }}
       >
         <View className="flex-col space-y-6 mt-4 w-full overflow-hidden">
-          {songs.map((item, index) => (
-            <SongsCard key={index} {...item} />
-          ))}
+          {!listedNfts
+            ? null
+            : listedNfts?.listedMusicNFTs?.map((val, i) => (
+                <SongsCard key={i} {...val} />
+              ))}
         </View>
       </ScrollView>
     </View>
