@@ -27,8 +27,12 @@ export class ArtistAddedNFTs__Params {
     return this._event.parameters[0].value.toAddress();
   }
 
-  get nfts(): Array<string> {
-    return this._event.parameters[1].value.toStringArray();
+  get nfts(): Bytes {
+    return this._event.parameters[1].value.toBytes();
+  }
+
+  get chainid(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
   }
 }
 
@@ -333,6 +337,25 @@ export class Contract extends ethereum.SmartContract {
     );
   }
 
+  getAllArtists(): Array<Address> {
+    let result = super.call("getAllArtists", "getAllArtists():(address[])", []);
+
+    return result[0].toAddressArray();
+  }
+
+  try_getAllArtists(): ethereum.CallResult<Array<Address>> {
+    let result = super.tryCall(
+      "getAllArtists",
+      "getAllArtists():(address[])",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddressArray());
+  }
+
   getAnalytics(
     subcriberAddress: Address,
     artistAddress: Address
@@ -619,6 +642,29 @@ export class Contract extends ethereum.SmartContract {
       "isSubscribed",
       "isSubscribed(address,address):(bool)",
       [ethereum.Value.fromAddress(user), ethereum.Value.fromAddress(artist)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  isWalletAnArtist(artistAddress: Address): boolean {
+    let result = super.call(
+      "isWalletAnArtist",
+      "isWalletAnArtist(address):(bool)",
+      [ethereum.Value.fromAddress(artistAddress)]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_isWalletAnArtist(artistAddress: Address): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "isWalletAnArtist",
+      "isWalletAnArtist(address):(bool)",
+      [ethereum.Value.fromAddress(artistAddress)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();

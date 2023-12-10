@@ -10,10 +10,16 @@
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "string[3]",
         "name": "nfts",
         "type": "string[3]"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "chainid",
+        "type": "uint256"
       }
     ],
     "name": "ArtistAddedNFTs",
@@ -161,6 +167,15 @@
     "name": "deposit",
     "outputs": [],
     "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getAllArtists",
+    "outputs": [
+      { "internalType": "address[]", "name": "", "type": "address[]" }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -372,6 +387,15 @@
       { "internalType": "address", "name": "artist", "type": "address" }
     ],
     "name": "isSubscribed",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "artistAddress", "type": "address" }
+    ],
+    "name": "isWalletAnArtist",
     "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"

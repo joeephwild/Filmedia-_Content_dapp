@@ -9,7 +9,8 @@ import {
 
 export function createArtistAddedNFTsEvent(
   artist: Address,
-  nfts: Array<string>
+  nfts: Array<string>,
+  chainid: BigInt
 ): ArtistAddedNFTs {
   let artistAddedNfTsEvent = changetype<ArtistAddedNFTs>(newMockEvent())
 
@@ -20,6 +21,12 @@ export function createArtistAddedNFTsEvent(
   )
   artistAddedNfTsEvent.parameters.push(
     new ethereum.EventParam("nfts", ethereum.Value.fromStringArray(nfts))
+  )
+  artistAddedNfTsEvent.parameters.push(
+    new ethereum.EventParam(
+      "chainid",
+      ethereum.Value.fromUnsignedBigInt(chainid)
+    )
   )
 
   return artistAddedNfTsEvent

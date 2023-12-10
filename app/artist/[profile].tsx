@@ -99,6 +99,7 @@ const ArtistProfile = () => {
       <PaymentModal
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
+        depositing={false}
       />
     </ScrollView>
   );

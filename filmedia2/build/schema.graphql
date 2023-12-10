@@ -2,6 +2,7 @@ type ArtistAddedNFTs @entity(immutable: true) {
   id: Bytes!
   artist: Bytes! # address
   nfts: [String!]! # string[3]
+  chainid: BigInt! # uint256
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!

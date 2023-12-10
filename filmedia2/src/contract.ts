@@ -16,7 +16,8 @@ export function handleArtistAddedNFTs(event: ArtistAddedNFTsEvent): void {
     event.transaction.hash.concatI32(event.logIndex.toI32())
   );
   entity.artist = event.params.artist;
-  entity.nfts = event.params.nfts;
+  // entity.nfts = event.params.nfts
+  entity.chainid = event.params.chainid;
 
   entity.blockNumber = event.block.number;
   entity.blockTimestamp = event.block.timestamp;
