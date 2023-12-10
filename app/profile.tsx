@@ -46,7 +46,7 @@ const profile = () => {
       console.log("profileById", profileById?.followModule); // Add this line
       console.log("profile", profileById?.handle?.ownedBy);
       setProfile(profileById);
-      setHandle(profileById?.handle?.fullHandle);
+      setHandle(profileById?.handle?.localName);
       setFollower((_) => ({
         followers: profileById?.stats.followers,
         following: profileById?.stats.followers,
@@ -63,7 +63,6 @@ const profile = () => {
     const getNFTByAddress = async () => {
       const nfts: any = await _getAWalletNFT();
 
-      console.log(nfts, "all nfts");
       // setBalance(balance.toString());
     };
 
@@ -75,8 +74,8 @@ const profile = () => {
       });
       setIsArtist(isArtistBool);
     };
-    isAnArtist();
-    getNFTByAddress();
+    // isAnArtist();
+    // getNFTByAddress();
     getProfile();
     getUserBalance();
   }, []);
@@ -209,6 +208,7 @@ const profile = () => {
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         depositing={depositing}
+        artirstAddress={""}
       />
     </ScrollView>
   );

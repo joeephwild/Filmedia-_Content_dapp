@@ -20,13 +20,14 @@ const SignUp = ({ setCurrentScreen }: Props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [lens, setLoginWithLens] = useState(false);
 
   const { createAnEOA } = useAuth();
 
   const handleSubmit = async () => {
     if (!name || !password || password !== confirmPassword)
       return Alert.alert("Fill up needed data");
-    createAnEOA(name, email, password);
+    createAnEOA(name, password, lens, "");
   };
   return (
     <ScrollView
@@ -49,8 +50,7 @@ const SignUp = ({ setCurrentScreen }: Props) => {
               Create your account and dive into a world of Blockchain.
             </Text>
           </View>
-
-          {/** form section */}
+{/** form section */}
           <View className="">
             <InputField
               label="Name"

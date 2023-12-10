@@ -8,6 +8,7 @@ import {
   useQuery,
 } from "@apollo/client";
 import { client } from "../../constants/addresses";
+
 import GET_LISTED_NFTS from "../../constants/subgraphQueries";
 
 const music = () => {
@@ -53,6 +54,7 @@ const Musics = () => {
   ];
   const { loading, error, data: listedNfts } = useQuery(GET_LISTED_NFTS);
 
+  console.log(listedNfts, "shssssssssssssssssssss");
   return (
     <View style={styles.container}>
       {!listedNfts

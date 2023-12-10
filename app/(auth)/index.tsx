@@ -27,6 +27,7 @@ const index = () => {
         break;
     }
   };
+
   return (
     <SafeAreaView>
       <StatusBar barStyle="light-content" />

@@ -22,12 +22,14 @@ type Props = {
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
   depositing: boolean;
+  artirstAddress: string;
 };
 
 const PaymentProcessing = ({
   setModalVisible,
   setCurrentStep,
   depositing,
+  artirstAddress,
 }: Props) => {
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
@@ -40,20 +42,20 @@ const PaymentProcessing = ({
         console.log("skskskksk");
         bool = await _deposit({ value: amount });
       } else {
-        // bool = await _subcribeToArtist({
-        //   _artistAddr: "0x558A03Ea3052620c34D12fA3A1500EbA7D135bE9",
-        // });
+        bool = await _subcribeToArtist({
+          _artistAddr: artirstAddress,
+        });
 
-        // bool = await _safeMint({
-        //   artistAddress: "0x558A03Ea3052620c34D12fA3A1500EbA7D135bE9",
-        // });
+        bool = await _safeMint({
+          artistAddress: artirstAddress,
+        });
 
         const tokenId = await _getTokenIdDynamicNFT();
         const walletAddress = await _getWalletAddress();
 
         bool = await _setTokenId({
           subcriberAddress: walletAddress,
-          artistAddress: "0x558A03Ea3052620c34D12fA3A1500EbA7D135bE9",
+          artistAddress: artirstAddress,
           tokenId: tokenId.toString(),
           nftAddress: dynamicNftAddress,
         });

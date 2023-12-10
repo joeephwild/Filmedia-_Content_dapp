@@ -86,7 +86,6 @@ type AuthProviderProps = {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [session, setSession] = useState<Session>();
-  const [user, setUser] = useState<FirebaseAuthUser | null>(null);
   console.log("user", session);
   // useProtectedRoute(session);
 
@@ -103,13 +102,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     try {
       if (!lensBool) {
-        let { privateKey, walletAddress, phrase } = await _createWallet();
+        let { privateKey: key, walletAddress, phrase } = await _createWallet();
 
         const user = {
           name,
           password,
           walletAddress,
-          privateKey,
+          privateKey: key,
           phrase,
         };
         console.log(user);
@@ -118,6 +117,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
           handle: name,
           to: walletAddress,
         });
+        console.log("creating.....");
+
+        await AsyncStorage.setItem("user", JSON.stringify(user));
+
         console.log(profileCreateResult);
         const profileCreateResultValue = profileCreateResult;
         if (!profileCreateResultValue) {
@@ -126,7 +129,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
         }
         if (walletAddress && profileCreateResult) {
           await signInWithLens(walletAddress);
-          await AsyncStorage.setItem("user", JSON.stringify(user));
 
           router.push("/(tabs)");
         }
