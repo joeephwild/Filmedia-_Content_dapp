@@ -88,7 +88,7 @@ export default function TabLayout() {
           name="index"
           options={{
             tabBarLabel: "Explore",
-            tabBarIcon: ({ color }) => (
+            tabBarIcon: ({ color }: { color: string }) => (
               <Ionicons name="search" color={color} size={28} />
             ),
             headerRight: () => (
@@ -109,7 +109,7 @@ export default function TabLayout() {
           name="live"
           options={{
             tabBarLabel: "Live",
-            tabBarIcon: ({ color }) => (
+            tabBarIcon: ({ color }: { color: string }) => (
               <Ionicons name="recording" color={color} size={28} />
             ),
           }}
@@ -118,7 +118,7 @@ export default function TabLayout() {
           name="music"
           options={{
             tabBarLabel: "Music",
-            tabBarIcon: ({ color }) => (
+            tabBarIcon: ({ color }: { color: string }) => (
               <Ionicons name="musical-notes" size={28} color={color} />
             ),
           }}
@@ -136,7 +136,7 @@ export default function TabLayout() {
           name="nft"
           options={{
             tabBarLabel: "Profile",
-            tabBarIcon: ({ color }) => (
+            tabBarIcon: ({ color }: { color: string }) => (
               <Ionicons name="contrast" size={28} color={color} />
             ),
           }}
@@ -145,7 +145,7 @@ export default function TabLayout() {
           name="library"
           options={{
             tabBarLabel: "Library",
-            tabBarIcon: ({ color }) => (
+            tabBarIcon: ({ color }: { color: string }) => (
               <Ionicons name="library" size={28} color={color} />
             ),
           }}

@@ -37,7 +37,6 @@ type AuthContextValue = {
   session: Session;
   createAnEOA: (
     name: string,
-    email: string,
     password: string,
     lensBool: boolean,
     privateKey: string
@@ -93,7 +92,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const createAnEOA = async (
     name: string,
-    email: string,
     password: string,
     lensBool: boolean,
     privateKey: string

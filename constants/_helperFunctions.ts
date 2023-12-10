@@ -11,7 +11,7 @@ import artistNFTAbi from "./abis/FilMediaArtistNFTAbi.json";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert } from "react-native";
 import { lensClient } from "./LensApi";
-import { LimitType } from "@lens-protocol/client";
+// import { LimitType } from "@lens-protocol/client";
 
 let filMediaMarketplaceContract: any,
   dynamicNftContract: any,
