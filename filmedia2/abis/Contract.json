@@ -1,9 +1,5 @@
 [
-  {
-    "inputs": [],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
+  { "inputs": [], "stateMutability": "nonpayable", "type": "constructor" },
   {
     "anonymous": false,
     "inputs": [
@@ -14,10 +10,16 @@
         "type": "address"
       },
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "string[3]",
         "name": "nfts",
         "type": "string[3]"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "chainid",
+        "type": "uint256"
       }
     ],
     "name": "ArtistAddedNFTs",
@@ -104,46 +106,21 @@
     "name": "SubcribedToArtist",
     "type": "event"
   },
-  {
-    "stateMutability": "payable",
-    "type": "fallback"
-  },
+  { "stateMutability": "payable", "type": "fallback" },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "artist",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "user", "type": "address" },
+      { "internalType": "address", "name": "artist", "type": "address" }
     ],
     "name": "_tokenId",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "_artistAddr",
-        "type": "address"
-      },
-      {
-        "internalType": "string[3]",
-        "name": "nfts",
-        "type": "string[3]"
-      }
+      { "internalType": "address", "name": "_artistAddr", "type": "address" },
+      { "internalType": "string[3]", "name": "nfts", "type": "string[3]" }
     ],
     "name": "addNFTForArtist",
     "outputs": [],
@@ -152,11 +129,7 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "_artistAddr",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "_artistAddr", "type": "address" }
     ],
     "name": "cancelSubcribtion",
     "outputs": [],
@@ -170,43 +143,21 @@
         "name": "subcriberAddress",
         "type": "address"
       },
-      {
-        "internalType": "address",
-        "name": "artistAddress",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "artistAddress", "type": "address" }
     ],
     "name": "checkIfUserIsSubcribed",
     "outputs": [
-      {
-        "internalType": "bool",
-        "name": "_isSubcribedBool",
-        "type": "bool"
-      }
+      { "internalType": "bool", "name": "_isSubcribedBool", "type": "bool" }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "bytes",
-        "name": "",
-        "type": "bytes"
-      }
-    ],
+    "inputs": [{ "internalType": "bytes", "name": "", "type": "bytes" }],
     "name": "checkUpkeep",
     "outputs": [
-      {
-        "internalType": "bool",
-        "name": "upkeepNeeded",
-        "type": "bool"
-      },
-      {
-        "internalType": "bytes",
-        "name": "",
-        "type": "bytes"
-      }
+      { "internalType": "bool", "name": "upkeepNeeded", "type": "bool" },
+      { "internalType": "bytes", "name": "", "type": "bytes" }
     ],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -219,17 +170,22 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "getAllArtists",
+    "outputs": [
+      { "internalType": "address[]", "name": "", "type": "address[]" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
         "name": "subcriberAddress",
         "type": "address"
       },
-      {
-        "internalType": "address",
-        "name": "artistAddress",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "artistAddress", "type": "address" }
     ],
     "name": "getAnalytics",
     "outputs": [
@@ -245,16 +201,8 @@
             "name": "currentlySubcribed",
             "type": "bool"
           },
-          {
-            "internalType": "address",
-            "name": "artist",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "subcriber",
-            "type": "address"
-          },
+          { "internalType": "address", "name": "artist", "type": "address" },
+          { "internalType": "address", "name": "subcriber", "type": "address" },
           {
             "internalType": "uint256",
             "name": "subcribedDate",
@@ -271,11 +219,7 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "_artistAddr",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "_artistAddr", "type": "address" }
     ],
     "name": "getArtist",
     "outputs": [
@@ -296,11 +240,7 @@
             "name": "allSubcribers",
             "type": "address[]"
           },
-          {
-            "internalType": "string[]",
-            "name": "nfts",
-            "type": "string[]"
-          }
+          { "internalType": "string[]", "name": "nfts", "type": "string[]" }
         ],
         "internalType": "struct IStructs.Artist",
         "name": "",
@@ -313,48 +253,22 @@
   {
     "inputs": [],
     "name": "getChainlinkDataFeedLatestAnswer",
-    "outputs": [
-      {
-        "internalType": "int256",
-        "name": "",
-        "type": "int256"
-      }
-    ],
+    "outputs": [{ "internalType": "int256", "name": "", "type": "int256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
     ],
     "name": "getMusic",
     "outputs": [
       {
         "components": [
-          {
-            "internalType": "address",
-            "name": "nft",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "tokenId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "streams",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "artist",
-            "type": "address"
-          }
+          { "internalType": "address", "name": "nft", "type": "address" },
+          { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+          { "internalType": "uint256", "name": "streams", "type": "uint256" },
+          { "internalType": "address", "name": "artist", "type": "address" }
         ],
         "internalType": "struct FilMediaMarketplace.Music",
         "name": "",
@@ -366,36 +280,16 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "_artistAddr",
-        "type": "address"
-      }
+      { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+      { "internalType": "address", "name": "_artistAddr", "type": "address" }
     ],
     "name": "getMusicNFT",
     "outputs": [
       {
         "components": [
-          {
-            "internalType": "address",
-            "name": "nft",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "tokenId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "artist",
-            "type": "address"
-          }
+          { "internalType": "address", "name": "nft", "type": "address" },
+          { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+          { "internalType": "address", "name": "artist", "type": "address" }
         ],
         "internalType": "struct FilMediaMarketplace.ListMusicNFT",
         "name": "",
@@ -421,16 +315,8 @@
             "name": "currentlySubcribed",
             "type": "bool"
           },
-          {
-            "internalType": "address",
-            "name": "artist",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "subcriber",
-            "type": "address"
-          },
+          { "internalType": "address", "name": "artist", "type": "address" },
+          { "internalType": "address", "name": "subcriber", "type": "address" },
           {
             "internalType": "uint256",
             "name": "subcribedDate",
@@ -452,30 +338,16 @@
         "name": "subcriberAddress",
         "type": "address"
       },
-      {
-        "internalType": "address",
-        "name": "artistAddress",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "artistAddress", "type": "address" }
     ],
     "name": "getTokenId",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "_userAddress",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "_userAddress", "type": "address" }
     ],
     "name": "getUser",
     "outputs": [
@@ -502,77 +374,44 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "_userAddress",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "_userAddress", "type": "address" }
     ],
     "name": "getUserBalance",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "artist",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "user", "type": "address" },
+      { "internalType": "address", "name": "artist", "type": "address" }
     ],
     "name": "isSubscribed",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "artistAddress", "type": "address" }
     ],
+    "name": "isWalletAnArtist",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "lastTimeStamp",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "_nft",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "_artistAddr",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "_nft", "type": "address" },
+      { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+      { "internalType": "address", "name": "_artistAddr", "type": "address" }
     ],
     "name": "listNFT",
     "outputs": [],
@@ -581,41 +420,17 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "year",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "artist",
-        "type": "address"
-      }
+      { "internalType": "uint256", "name": "year", "type": "uint256" },
+      { "internalType": "address", "name": "user", "type": "address" },
+      { "internalType": "address", "name": "artist", "type": "address" }
     ],
     "name": "monthlySubcriptionBool",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "bytes",
-        "name": "",
-        "type": "bytes"
-      }
-    ],
+    "inputs": [{ "internalType": "bytes", "name": "", "type": "bytes" }],
     "name": "performUpkeep",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -628,21 +443,9 @@
         "name": "subcriberAddress",
         "type": "address"
       },
-      {
-        "internalType": "address",
-        "name": "artistAddress",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "_nftAddress",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "artistAddress", "type": "address" },
+      { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
+      { "internalType": "address", "name": "_nftAddress", "type": "address" }
     ],
     "name": "setTokenId",
     "outputs": [],
@@ -651,19 +454,12 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "_artistAddr",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "_artistAddr", "type": "address" }
     ],
     "name": "subcribeToArtist",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
-  {
-    "stateMutability": "payable",
-    "type": "receive"
-  }
+  { "stateMutability": "payable", "type": "receive" }
 ]

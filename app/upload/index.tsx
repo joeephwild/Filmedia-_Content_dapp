@@ -15,6 +15,7 @@ import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
 import axios from "axios";
 import {
+  _addNFTForArtist,
   _getTokenIdArtist,
   _getWalletAddress,
   _listNFT,
@@ -23,12 +24,15 @@ import {
 import { artistNFTAddress } from "../../constants/addresses";
 
 const index = () => {
+  const [firstNFT, setFirstNFT] = useState("");
+  const [secondNFT, setSecondNFT] = useState("");
+  const [thirdNFT, setThirdNFT] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [file, setFile] = useState("");
   const [musicName, setmusicName] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const [loadingNFT, setloadingNFT] = useState(false);
   const handleSubmit = async () => {
     try {
       setLoading(true);
@@ -62,9 +66,28 @@ const index = () => {
       });
 
       setLoading(false);
-      Alert.alert("Successfully Listed");
+      Alert.alert("Successfully Listed NFTS");
     } catch (error) {
       setLoading(false);
+      Alert.alert("Not Successful");
+      console.log(error);
+    }
+  };
+
+  const handleSubmitNFTS = async () => {
+    try {
+      setloadingNFT(true);
+      const walletAddress = await _getWalletAddress();
+
+      await _addNFTForArtist({
+        _artistAddr: walletAddress,
+        nfts: [firstNFT, secondNFT, thirdNFT],
+      });
+
+      setLoading(false);
+      Alert.alert("Successfully Listed");
+    } catch (error) {
+      setloadingNFT(false);
       Alert.alert("Not Successful");
       console.log(error);
     }
@@ -161,6 +184,41 @@ const index = () => {
         >
           <Text className="text-[14px] font-bold text-[#fff]">
             {loading ? "Uploading..." : "Upload"}
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.inputs}>
+        <Text style={{ color: "white", marginTop: 10, fontSize: 20 }}>
+          UPLOAD YOUR NFT'S
+        </Text>
+        <InputField
+          label="FIRST NFT"
+          name="name"
+          value={firstNFT}
+          placeholder="First  NFT"
+          onChange={setFirstNFT}
+        />
+        <InputField
+          label="SECOND NFT"
+          name="description"
+          value={secondNFT}
+          placeholder="SECOND  NFT"
+          onChange={setSecondNFT}
+        />
+        <InputField
+          label="THIRD NFT"
+          name="musicName"
+          value={thirdNFT}
+          placeholder="THIRD  NFT"
+          onChange={setThirdNFT}
+        />
+
+        <TouchableOpacity
+          onPress={handleSubmitNFTS}
+          className="py-[16px] px-[40px] items-center bg-[#4169E1] rounded-[40px]"
+        >
+          <Text className="text-[14px] font-bold text-[#fff]">
+            {loadingNFT ? "Uploading..." : "Upload Your NFTS"}
           </Text>
         </TouchableOpacity>
       </View>

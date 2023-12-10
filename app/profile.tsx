@@ -8,26 +8,67 @@ import TopSongs from "../components/profile/TopSongs";
 import Albums from "../components/profile/Albums";
 import { SafeAreaView } from "react-native-safe-area-context";
 import PaymentModal from "../components/PaymentModal";
-import { lensClient } from "../context/AuthContext";
 import { ProfileFragment } from "@lens-protocol/client";
+import {
+  _getAWalletNFT,
+  _getUserBalance,
+  _getUserFromLocalStorage,
+  _getWalletAddress,
+} from "../constants/_helperFunctions";
+import { ethers } from "ethers";
+import NFTs from "../components/NFTs";
+import { lensClient } from "../constants/LensApi";
 
 const profile = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [depositing, setDeposting] = useState(true);
+  const [balance, setBalance] = useState("0");
+  const [walletAddress, setwalletAddress] = useState("");
+  const [handle, setHandle] = useState("");
+  const [follower, setFollower] = useState({
+    followers: 0,
+    following: 0,
+  });
 
   const [profile, setProfile] = useState<ProfileFragment | null>();
   // console.log(profile?.metadata?.displayName)
 
   useEffect(() => {
     const getProfile = async () => {
-      const profileById = await lensClient.profile.fetch({
-        forProfileId: "0x01",
+      const user: any = await _getUserFromLocalStorage();
+      console.log(user);
+      const profileById: any = await lensClient.profile.fetch({
+        forHandle: `test/${user.name}`,
       });
       console.log("profileById", profileById?.followModule); // Add this line
-      console.log("profile",profileById?.metadata);
+      console.log("profile", profileById?.handle?.ownedBy);
       setProfile(profileById);
+      setHandle(profileById?.handle?.fullHandle);
+      setFollower((_) => ({
+        followers: profileById?.stats.followers,
+        following: profileById?.stats.followers,
+      }));
     };
+    const getUserBalance = async () => {
+      const walletAddress: string = await _getWalletAddress();
+
+      setwalletAddress(walletAddress);
+      const balance = await _getUserBalance({ userAddress: walletAddress });
+
+      setBalance(balance.toString());
+    };
+    const getNFTByAddress = async () => {
+      const nfts: any = await _getAWalletNFT();
+
+      console.log(nfts, "all nfts");
+      // setBalance(balance.toString());
+    };
+
+    getNFTByAddress();
     getProfile();
-  }, [profile]);
+    getUserBalance();
+  }, []);
+
   return (
     <ScrollView
       style={{ flex: 1, minHeight: "100%", marginBottom: 789 }}
@@ -55,17 +96,77 @@ const profile = () => {
           }}
         />
       </ImageBackground>
-      <View style={{ position: "absolute", top: 135, right: 0, left: 0 }}>
+      <View
+        style={{
+          position: "absolute",
+          top: 135,
+          right: 0,
+          left: 0,
+        }}
+      >
         <View style={{ alignItems: "center" }}>
           <Text style={{ fontSize: 40, fontWeight: "bold", color: "#fff" }}>
-            Davido
+            {`@${handle}`}
           </Text>
           <Text style={{ fontSize: 16, fontWeight: "bold", color: "#A8A8A8" }}>
-            Subscribers 3.7M
+            {`Welcome Back`}
           </Text>
         </View>
+        <View style={{ flexDirection: "row", justifyContent: "center" }}>
+          <TouchableOpacity
+            onPress={() => setModalVisible(true)}
+            style={{
+              marginTop: 29,
+              paddingHorizontal: 24,
+              backgroundColor: "#4169E1",
+              paddingVertical: 8,
+              alignItems: "center",
+              justifyContent: "center",
+              // width: "40%",
+              marginRight: 4,
+              borderRadius: 40,
+            }}
+            className="mx-auto"
+          >
+            <Text style={{ fontSize: 12, fontWeight: "bold", color: "#fff" }}>
+              Upload Content
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setModalVisible(true)}
+            style={{
+              marginTop: 29,
+              paddingHorizontal: 24,
+              backgroundColor: "#4169E1",
+              paddingVertical: 8,
+              alignItems: "center",
+              justifyContent: "center",
+              // width: "40%",
+              borderRadius: 40,
+            }}
+            className="mx-auto"
+          >
+            <Text style={{ fontSize: 12, fontWeight: "bold", color: "#fff" }}>
+              DEPOSIT
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            justifyContent: "center",
+            flexDirection: "row",
+            marginTop: 10,
+          }}
+        >
+          <Text
+            style={{ color: "white" }}
+          >{`${follower.following} FOLLOWING`}</Text>
+          <Text style={{ color: "white" }}> - </Text>
+          <Text
+            style={{ color: "white" }}
+          >{`${follower.followers} FOLLOWERS`}</Text>
+        </View>
         <TouchableOpacity
-          onPress={() => setModalVisible(true)}
           style={{
             marginTop: 29,
             paddingHorizontal: 24,
@@ -73,26 +174,26 @@ const profile = () => {
             paddingVertical: 8,
             alignItems: "center",
             justifyContent: "center",
-            width: "40%",
-            borderRadius: 40,
+            // width: "40%",
+            // borderRadius: 40,
           }}
           className="mx-auto"
         >
           <Text style={{ fontSize: 12, fontWeight: "bold", color: "#fff" }}>
-            Subscribe for $5
+            {`YOUR BALANCE ${walletAddress.slice(0, 4)}...${walletAddress.slice(
+              -4
+            )} : ${ethers.formatEther(balance)} ETH`}
           </Text>
         </TouchableOpacity>
 
         <View style={{ paddingTop: 9 }}>
-          <SubscriptionHeatmap />
-          <LatestRelease />
-          <TopSongs />
-          <Albums />
+          <NFTs />
         </View>
       </View>
       <PaymentModal
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
+        depositing={depositing}
       />
     </ScrollView>
   );

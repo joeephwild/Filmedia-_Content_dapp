@@ -14,12 +14,12 @@ type Props = {
 };
 
 const SongsCard = ({ artist, image, name, title, tokenId }: Props) => {
-  const [imageURI, tokenName, tokenDescription, category] = useGetNFTs(
-    tokenId,
-    artistNFTAddress
-  );
+  // const [imageURI, tokenName, tokenDescription, category] = useGetNFTs(
+  //   tokenId,
+  //   artistNFTAddress
+  // );
 
-  console.log(imageURI);
+  // console.log(imageURI);
   return (
     <View className="flex-row items-center space-x-2 w-full pb-4">
       <Text className="border-y text-[#fff] border-[#fff]">1</Text>

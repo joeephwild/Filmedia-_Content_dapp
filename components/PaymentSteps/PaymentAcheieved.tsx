@@ -1,12 +1,24 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { View, Text, TouchableOpacity } from "react-native";
+import React from "react";
 
-const PaymentAcheieved = () => {
+type Props = {
+  setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
+};
+
+const PaymentAcheieved = ({ setModalVisible, setCurrentStep }: Props) => {
   return (
-    <View>
-      <Text>PaymentAcheieved</Text>
-    </View>
-  )
-}
+    <TouchableOpacity
+      onPress={() => {
+        setCurrentStep(0);
+        setModalVisible(false);
+      }}
+    >
+      <View>
+        <Text>PaymentAcheieved</Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
 
-export default PaymentAcheieved
+export default PaymentAcheieved;

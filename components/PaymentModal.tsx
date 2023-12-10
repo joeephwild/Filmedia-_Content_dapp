@@ -7,9 +7,10 @@ import PaymentAcheieved from "./PaymentSteps/PaymentAcheieved";
 type Props = {
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
   modalVisible: boolean;
+  depositing: boolean;
 };
 
-const PaymentModal = ({ modalVisible, setModalVisible }: Props) => {
+const PaymentModal = ({ modalVisible, setModalVisible, depositing }: Props) => {
   const [currentStep, setCurrentStep] = useState(0);
 
   const next = () => {
@@ -31,10 +32,21 @@ const PaymentModal = ({ modalVisible, setModalVisible }: Props) => {
           />
         );
       case 1:
-        return <PaymentProcessing />;
+        return (
+          <PaymentProcessing
+            setModalVisible={setModalVisible}
+            setCurrentStep={setCurrentStep}
+            depositing={depositing}
+          />
+        );
 
       case 2:
-        return <PaymentAcheieved />;
+        return (
+          <PaymentAcheieved
+            setModalVisible={setModalVisible}
+            setCurrentStep={setCurrentStep}
+          />
+        );
 
       default:
         break;

@@ -15,11 +15,13 @@ import {
 } from "firebase/auth";
 import { auth } from "../firebase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { LensClient, development, isRelaySuccess } from "@lens-protocol/client";
-
-const lensClient = new LensClient({
-  environment: development,
-});
+import {
+  _createWallet,
+  _getWalletAddress,
+  signInWithLens,
+} from "../constants/_helperFunctions";
+import { lensClient } from "../constants/LensApi";
+import { ethers } from "ethers";
 
 type Session = string | undefined;
 
@@ -33,7 +35,13 @@ interface DataItem {
 
 type AuthContextValue = {
   session: Session;
-  createAnEOA: (name: string, email: string, password: string) => Promise<void>;
+  createAnEOA: (
+    name: string,
+    email: string,
+    password: string,
+    lensBool: boolean,
+    privateKey: string
+  ) => Promise<void>;
   permanentlyDeleteAccount: () => Promise<void>;
   signin: (email: string, password: string) => Promise<void>;
   // Add other values you want to provide through the context here
@@ -83,42 +91,78 @@ export function AuthProvider({ children }: AuthProviderProps) {
   console.log("user", session);
   // useProtectedRoute(session);
 
-  const createAnEOA = async (name: string, email: string, password: string) => {
+  const createAnEOA = async (
+    name: string,
+    email: string,
+    password: string,
+    lensBool: boolean,
+    privateKey: string
+  ) => {
     // if (session) {
     //   Alert.alert("You already have an account");
     //   return;
     // }
 
     try {
-      let accountAddress: string | undefined = await getAccount();
+      if (!lensBool) {
+        let { privateKey, walletAddress, phrase } = await _createWallet();
 
-      if (!accountAddress) {
-        accountAddress = await createAccount();
-      }
+        const user = {
+          name,
+          password,
+          walletAddress,
+          privateKey,
+          phrase,
+        };
+        console.log(user);
 
-      const user = {
-        name,
-        password,
-        walletAddress: accountAddress,
-      };
-      console.log(user);
-      await AsyncStorage.setItem("user", JSON.stringify(user));
+        const profileCreateResult = await lensClient.profile.create({
+          handle: name,
+          to: walletAddress,
+        });
+        console.log(profileCreateResult);
+        const profileCreateResultValue = profileCreateResult;
+        if (!profileCreateResultValue) {
+          Alert.alert(`Something went wrong`, profileCreateResultValue);
+          return;
+        }
+        if (walletAddress && profileCreateResult) {
+          await signInWithLens(walletAddress);
+          await AsyncStorage.setItem("user", JSON.stringify(user));
 
-      const profileCreateResult = await lensClient.profile.create({
-        handle: name,
-        to: accountAddress,
-      });
+          router.push("/(tabs)");
+        }
+      } else {
+        let signer = new ethers.Wallet(privateKey);
 
-      // profileCreateResult is a Result object
-      const profileCreateResultValue = profileCreateResult;
+        let walletAddress = signer.address;
+        const user = {
+          name,
+          password,
+          walletAddress,
+          privateKey,
+          phrase: "",
+        };
 
-      if (!profileCreateResultValue) {
-        Alert.alert(`Something went wrong`, profileCreateResultValue);
-        return;
-      }
-      if (accountAddress && profileCreateResult) {
+        const profileById: any = await lensClient.profile.fetch({
+          forHandle: `test/${name}`,
+        });
+        console.log(
+          profileById?.handle?.ownedBy != walletAddress,
+          profileById?.handle?.ownedBy,
+          walletAddress
+        );
+        if (profileById?.handle?.ownedBy != walletAddress) {
+          return Alert.alert(
+            "Wallet Address doesn't match Address created with this Lens Handle"
+          );
+        }
+        await signInWithLens(walletAddress);
+        await AsyncStorage.setItem("user", JSON.stringify(user));
         router.push("/(tabs)");
       }
+
+      // profileCreateResult is a Result object
     } catch (error) {
       Alert.alert("Error creating a new account");
       console.error(error);
@@ -137,10 +181,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
       } else {
         // User is null
         // Handle the case where the user is not found
+        await signInWithLens(parseUser.walletAddress);
+
         router.push("/(tabs)");
       }
     } else {
-      Alert.alert("Error creating a new account");
+      Alert.alert("Error Please, Signup for a new account");
     }
   };
 
@@ -164,3 +210,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 }
+
+// 0x9ab0e4dd0ad0abc732c0d8eb6fe70ae5aa77a79fcb586789d2aaec94d91c3c46;
+// e26226

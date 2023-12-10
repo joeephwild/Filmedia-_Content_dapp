@@ -8,22 +8,23 @@ import {
 import filMediaMarketplaceAbi from "./abis/FilMediaMarketplace.json";
 import dynamicNftAbi from "./abis/FilMediaDynamicNFTAbi.json";
 import artistNFTAbi from "./abis/FilMediaArtistNFTAbi.json";
-import { getAccountPhrase } from "@rly-network/mobile-sdk";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert } from "react-native";
+import { lensClient } from "./LensApi";
+import { LimitType } from "@lens-protocol/client";
 
 let filMediaMarketplaceContract: any,
   dynamicNftContract: any,
-  artistNFTContract: any;
+  artistNFTContract: any,
+  signer: any;
 
 const connect = async () => {
-  const mnemonic: any = await getAccountPhrase();
-  const mnemonicWallet = ethers.Wallet.fromPhrase(mnemonic);
+  const user: any = await AsyncStorage.getItem("user");
+  const parseUser: any = JSON.parse(user);
 
-  let privateKey = mnemonicWallet.privateKey;
   const provider = new ethers.JsonRpcProvider(PROVIDER);
 
-  const signer = new ethers.Wallet(privateKey, provider);
+  signer = new ethers.Wallet(parseUser.privateKey, provider);
 
   filMediaMarketplaceContract = new ethers.Contract(
     filMediaMarketplaceAddress,
@@ -76,7 +77,7 @@ export const _addNFTForArtist = async ({
   nfts,
 }: {
   _artistAddr: string;
-  nfts: string[3];
+  nfts: any[];
 }): Promise<void> => {
   try {
     const tx = await filMediaMarketplaceContract.addNFTForArtist(
@@ -91,16 +92,24 @@ export const _addNFTForArtist = async ({
 };
 
 // Function to interact with the "deposit" Solidity function
-export const _deposit = async ({ value }: { value: string }): Promise<void> => {
+export const _deposit = async ({
+  value,
+}: {
+  value: string;
+}): Promise<boolean> => {
   try {
     const valueToSend = ethers.parseEther(value); // Replace '1' with the desired amount in ETH
+    console.log("depositing.........");
     const tx = await filMediaMarketplaceContract.deposit({
       value: valueToSend,
     });
-    await tx.wait();
+
     console.log("Transaction successful:", tx.hash);
+    await tx.wait();
+    return true;
   } catch (error) {
     console.error("Error depositing ETH:", error);
+    return false;
   }
 };
 
@@ -109,13 +118,15 @@ export const _subcribeToArtist = async ({
   _artistAddr,
 }: {
   _artistAddr: string;
-}): Promise<void> => {
+}): Promise<boolean> => {
   try {
     const tx = await filMediaMarketplaceContract.subcribeToArtist(_artistAddr);
     await tx.wait();
     console.log("Transaction successful:", tx.hash);
+    return true;
   } catch (error) {
     console.error("Error subscribing to artist:", error);
+    return false;
   }
 };
 
@@ -143,9 +154,9 @@ export const _setTokenId = async ({
 }: {
   subcriberAddress: string;
   artistAddress: string;
-  tokenId: number;
+  tokenId: string;
   nftAddress: string;
-}): Promise<void> => {
+}): Promise<boolean> => {
   try {
     const tx = await filMediaMarketplaceContract.setTokenId(
       subcriberAddress,
@@ -154,9 +165,13 @@ export const _setTokenId = async ({
       nftAddress
     );
     await tx.wait();
+
+    return true;
     console.log("Transaction successful:", tx.hash);
   } catch (error) {
     console.error("Error setting token ID:", error);
+
+    return false;
   }
 };
 
@@ -315,13 +330,17 @@ export const _safeMint = async ({
   artistAddress,
 }: {
   artistAddress: string;
-}): Promise<void> => {
+}): Promise<boolean> => {
   try {
     const tx = await dynamicNftContract.safeMint(artistAddress);
     await tx.wait();
     console.log("Transaction successful:", tx.hash);
+
+    return true;
   } catch (error) {
     console.error("Error calling safeMint:", error);
+
+    return false;
   }
 };
 
@@ -340,12 +359,16 @@ export const _getTokenUri = async ({
 };
 
 // Function to interact with the "getTokenId" Solidity function
-export const _getTokenIdDynamicNFT = async (): Promise<void> => {
+export const _getTokenIdDynamicNFT = async (): Promise<number> => {
   try {
     const tokenId = await dynamicNftContract.getTokenId();
     console.log("Token ID:", tokenId);
+
+    return tokenId;
   } catch (error) {
     console.error("Error calling getTokenId:", error);
+
+    return 0;
   }
 };
 
@@ -398,10 +421,11 @@ export const _getTokenIdArtist = async (): Promise<any> => {
 /////////// OTHER FUNCTIONS////////////////
 export const _getWalletAddress = async (): Promise<string> => {
   try {
-    const user: string | null = await AsyncStorage.getItem("user");
+    const user: any = await AsyncStorage.getItem("user");
+
     let walletAddress: string;
 
-    if (user != null) {
+    if (user) {
       const parseUser = JSON.parse(user);
       walletAddress = parseUser.walletAddress;
     } else {
@@ -410,8 +434,87 @@ export const _getWalletAddress = async (): Promise<string> => {
     }
     return walletAddress;
   } catch (error) {
+    console.log(error);
     Alert.alert("User");
 
+    return "Something went wrong";
+  }
+};
+
+export const _getUserFromLocalStorage = async (): Promise<any> => {
+  try {
+    const user: any = await AsyncStorage.getItem("user");
+    const parseUser = JSON.parse(user);
+
+    return parseUser;
+  } catch (error) {
+    console.log(error);
+    Alert.alert("User");
+
+    return "Something went wrong";
+  }
+};
+
+export const _getAWalletNFT = async (): Promise<any> => {
+  try {
+    // const result = await lensClient.nfts.fetch({
+    //   where: {
+    //     chainIds: [80001],
+    //     forAddress: "0xdf8C407E34bC6f64BAbFD623C35c7a789CB1964c",
+    //   },
+    //   limit: LimitType.Ten,
+    // });
+
+    const address: string = _getWalletAddress();
+    const balance = await artistNFTContract.balanceOf(
+      "0x74F60116FFd090ee71F6c1E5a530D036Aad02818"
+    );
+    const nfts = [];
+    for (let i = 1; i < balance; i++) {
+      const tokenId = await dynamicNftContract.tokenOfOwnerByIndex(address, i);
+      nfts.push(tokenId);
+    }
+    return nfts;
+  } catch (error) {
+    console.log(error, "error getting nfts");
+    Alert.alert("Something went wrong getting NFT's");
+    return "Something went wrong getting NFT's";
+  }
+};
+
+// Function to sign in with Lens using the provided address
+export const signInWithLens = async (address: any) => {
+  // Generate a challenge for authentication
+  try {
+    const { id, text } = await lensClient.authentication.generateChallenge({
+      signedBy: address,
+    });
+    const user: any = await _getUserFromLocalStorage();
+    const wallet = new ethers.Wallet(user.privateKey);
+
+    const signature = await wallet.signMessage(text);
+
+    await lensClient.authentication.authenticate({ id: id, signature });
+  } catch (error) {
+    console.log(error, "Error authenticating user");
+  }
+};
+
+export const _createWallet = async (): Promise<any> => {
+  try {
+    const walletData: any | null = ethers.Wallet.createRandom();
+    let phrase, privateKey, walletAddress;
+
+    if (walletData != null) {
+      phrase = walletData.mnemonic.phrase;
+      privateKey = walletData.privateKey;
+      walletAddress = new ethers.Wallet(privateKey).address;
+
+      console.log("This is the", privateKey, walletAddress);
+    }
+    return { privateKey, walletAddress, phrase };
+  } catch (error) {
+    Alert.alert("User");
     return "Something went wrong";
   }
 };

@@ -21,7 +21,12 @@ describe("Describe entity assertions", () => {
       "0x0000000000000000000000000000000000000001"
     )
     let nfts = ["Example string value"]
-    let newArtistAddedNFTsEvent = createArtistAddedNFTsEvent(artist, nfts)
+    let chainid = BigInt.fromI32(234)
+    let newArtistAddedNFTsEvent = createArtistAddedNFTsEvent(
+      artist,
+      nfts,
+      chainid
+    )
     handleArtistAddedNFTs(newArtistAddedNFTsEvent)
   })
 
@@ -47,6 +52,12 @@ describe("Describe entity assertions", () => {
       "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
       "nfts",
       "[Example string value]"
+    )
+    assert.fieldEquals(
+      "ArtistAddedNFTs",
+      "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
+      "chainid",
+      "234"
     )
 
     // More assert options:

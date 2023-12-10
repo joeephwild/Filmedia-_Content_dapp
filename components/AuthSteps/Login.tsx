@@ -15,15 +15,22 @@ type Props = {
 };
 
 const Login = ({ setCurrentScreen }: Props) => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [lens, setLoginWithLens] = useState(false);
+  const [privateKey, setPrivateKey] = useState("");
 
-  const { signin } = useAuth();
+  const { signin, createAnEOA } = useAuth();
 
   const handleSubmit = async () => {
-    if (!email || !password) return Alert.alert("fil up data");
+    if (!password) return Alert.alert("fil up data");
 
-    await signin(email, password);
+    if (lens == true) {
+      await createAnEOA(name, email, password, lens, privateKey);
+    } else {
+      await signin(email, password);
+    }
   };
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -39,13 +46,24 @@ const Login = ({ setCurrentScreen }: Props) => {
 
         {/** form section */}
         <View className="">
-          <InputField
-            label="E-mail"
-            value={email}
-            placeholder="example@gmail.com"
-            onChange={setEmail}
-            name=""
-          />
+          {lens && (
+            <>
+              <InputField
+                label="Your Lens Handle"
+                value={name}
+                placeholder="Enter Your Lens Handle"
+                onChange={setName}
+                name=""
+              />
+              <InputField
+                label="Private Key"
+                value={privateKey}
+                placeholder="Enter private key"
+                onChange={setPrivateKey}
+                name=""
+              />
+            </>
+          )}
           <InputField
             label="Password"
             value={password}
@@ -68,7 +86,13 @@ const Login = ({ setCurrentScreen }: Props) => {
               onPress={() => setCurrentScreen(0)}
               className="text-[#4169E1]"
             >
-              Sign up
+              Sign up{" "}
+            </Text>
+            <Text
+              onPress={() => setLoginWithLens((e) => !e)}
+              className="text-[#4169E1]"
+            >
+              {lens ? "Or Login" : "Or Login with Lens"}
             </Text>
           </Text>
         </View>
