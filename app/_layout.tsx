@@ -10,6 +10,19 @@ import React from "react";
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
 import { AuthProvider } from "../context/AuthContext";
+import {
+  Environment,
+  LensProvider,
+  Theme,
+} from "@lens-protocol/react-native-lens-ui-kit";
+import "@walletconnect/react-native-compat";
+import { WagmiConfig } from "wagmi";
+import { mainnet, polygon, arbitrum } from "viem/chains";
+import {
+  createWeb3Modal,
+  defaultWagmiConfig,
+  Web3Modal,
+} from "@web3modal/wagmi-react-native";
 
 export {
   // Catch any errors thrown by the Layout component.
