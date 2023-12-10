@@ -10,8 +10,8 @@ import dynamicNftAbi from "./abis/FilMediaDynamicNFTAbi.json";
 import artistNFTAbi from "./abis/FilMediaArtistNFTAbi.json";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert } from "react-native";
+
 import { lensClient } from "./LensApi";
-import { LimitType } from "@lens-protocol/client";
 
 let filMediaMarketplaceContract: any,
   dynamicNftContract: any,
@@ -22,10 +22,13 @@ const connect = async () => {
   const user: any = await AsyncStorage.getItem("user");
   const parseUser: any = JSON.parse(user);
 
-  const provider = new ethers.JsonRpcProvider(PROVIDER);
+  const provider = new ethers.JsonRpcProvider(
+    "https://polygon-mumbai.g.alchemy.com/v2/rTSTOJ-A9kZEEPNn_VUbjqnUFgtYQ2Kd"
+  );
 
   signer = new ethers.Wallet(parseUser.privateKey, provider);
 
+  console.log(parseUser, "this is parsed user");
   filMediaMarketplaceContract = new ethers.Contract(
     filMediaMarketplaceAddress,
     filMediaMarketplaceAbi,
@@ -345,6 +348,7 @@ export const _getUserBalance = async ({
     const balance = await filMediaMarketplaceContract.getUserBalance(
       userAddress
     );
+    console.log(balance, "this is the balance sjsjsjsjsjjssjsjsjjs");
     return balance;
   } catch (error) {
     console.error("Error calling getUserBalance:", error);

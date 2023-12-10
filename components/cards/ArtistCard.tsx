@@ -8,7 +8,9 @@ type Props = {
 
 const ArtistCard = ({ address }: Props) => {
   return (
-    <Link href={`/artist/${address}`}>
+    <Link
+      href={{ pathname: `/artist/${address}`, params: { address: address } }}
+    >
       <View className="flex-row items-center space-x-3 pb-5">
         <Text className="text-[14px] text-[#fff] font-bold">1</Text>
         <View className="flex-row items-center space-x-8">

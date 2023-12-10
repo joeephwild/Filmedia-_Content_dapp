@@ -4,6 +4,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import RangeComponents from "./RangeComponents";
 import SongsCard from "./cards/SongsCard";
 import { ScrollView } from "react-native-gesture-handler";
+import NFTCard from "./NFTCard";
 
 const NFTs = () => {
   const songs = [
@@ -55,7 +56,7 @@ const NFTs = () => {
       >
         <View className="flex-col space-y-6 mt-4 w-full overflow-hidden">
           {songs.slice(0, 3).map((item, index) => (
-            <SongsCard key={index} {...item} />
+            <NFTCard key={index} {...item} />
           ))}
         </View>
       </ScrollView>

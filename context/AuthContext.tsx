@@ -108,7 +108,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           name,
           password,
           walletAddress,
-          key,
+          privateKey: key,
           phrase,
         };
         console.log(user);
@@ -119,6 +119,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         });
         console.log("creating.....");
 
+        await AsyncStorage.setItem("user", JSON.stringify(user));
+
         console.log(profileCreateResult);
         const profileCreateResultValue = profileCreateResult;
         if (!profileCreateResultValue) {
@@ -127,7 +129,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
         }
         if (walletAddress && profileCreateResult) {
           await signInWithLens(walletAddress);
-          await AsyncStorage.setItem("user", JSON.stringify(user));
 
           router.push("/(tabs)");
         }

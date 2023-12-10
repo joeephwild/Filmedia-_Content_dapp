@@ -8,11 +8,13 @@ import TopSongs from "../../components/profile/TopSongs";
 import Albums from "../../components/profile/Albums";
 import { SafeAreaView } from "react-native-safe-area-context";
 import PaymentModal from "../../components/PaymentModal";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { lensClient } from "../../constants/LensApi";
 
 const ArtistProfile = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const params = useLocalSearchParams();
+  const { address } = params;
 
   const follow = async () => {
     const result = await lensClient.profile.follow({
@@ -55,6 +57,10 @@ const ArtistProfile = () => {
           <Text style={{ fontSize: 40, fontWeight: "bold", color: "#fff" }}>
             Davido
           </Text>
+          <Text style={{ fontSize: 15, fontWeight: "bold", color: "#fff" }}>
+            {`${address.slice(0, 4)}...${address.slice(-4)}`}
+          </Text>
+
           <Text style={{ fontSize: 16, fontWeight: "bold", color: "#A8A8A8" }}>
             Subscribers 3.7M
           </Text>
@@ -99,7 +105,7 @@ const ArtistProfile = () => {
         <View style={{ paddingTop: 9 }}>
           <SubscriptionHeatmap />
           <LatestRelease />
-          <TopSongs />
+          {/* <TopSongs /> */}
           <Albums />
         </View>
       </View>
@@ -107,6 +113,7 @@ const ArtistProfile = () => {
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         depositing={false}
+        artirstAddress={address}
       />
     </ScrollView>
   );
