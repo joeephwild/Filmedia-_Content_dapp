@@ -293,6 +293,34 @@ export const _getArtist = async ({
   }
 };
 
+export const _isWalletAnArtist = async ({
+  artistAddress,
+}: {
+  artistAddress: string;
+}): Promise<boolean> => {
+  try {
+    const isAnArtist = await filMediaMarketplaceContract.isWalletAnArtist(
+      artistAddress
+    );
+    return isAnArtist;
+  } catch (error) {
+    console.error("Error calling getArtist:", error);
+
+    return false;
+  }
+};
+
+export const _getAllArtist = async (): Promise<any> => {
+  try {
+    const artists = await filMediaMarketplaceContract.getAllArtists();
+    return artists;
+  } catch (error) {
+    console.error("Error calling getArtist:", error);
+
+    return "Unable to get artist";
+  }
+};
+
 // Function to interact with the "getUser" Solidity function
 export const _getUser = async ({
   userAddress,

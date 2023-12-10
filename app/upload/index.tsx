@@ -54,7 +54,7 @@ const index = () => {
       // call the mint contract
       await _safeMintArtist({
         artistAddress: walletAddress,
-        uri: "https://gateway.pinata.cloud/ipfs/QmPH8BPTWHMbPtUgSYvUFrzgewW1dWrVVp3nvQS4Efd81X",
+        uri: "https://gateway.pinata.cloud/ipfs/QmfDoQdyiBXdZrnD5pZ18KSRX5xHTqThwGdy4cSVXriADP",
       });
 
       const tokenId = await _getTokenIdArtist();

@@ -1,11 +1,12 @@
 import { View, Text } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import RangeComponents from "../RangeComponents";
 import SongsCard from "../cards/SongsCard";
 import { ScrollView } from "react-native-gesture-handler";
 import AlbumCard from "../cards/AlbumCard";
 import ArtistCard from "../cards/ArtistCard";
+import { _getAllArtist } from "../../constants/_helperFunctions";
 
 const AllArtist = () => {
   const songs = [
@@ -46,6 +47,16 @@ const AllArtist = () => {
       artist: "Artist E",
     },
   ];
+  const [artists, setArtist] = useState([]);
+
+  useEffect(() => {
+    const getAllArtist = async () => {
+      const artistsall = await _getAllArtist();
+      console.log(artistsall, "these atetesshshsshhsshshshh");
+      setArtist(artistsall);
+    };
+    getAllArtist();
+  }, []);
 
   return (
     <View className="">
@@ -62,9 +73,9 @@ const AllArtist = () => {
       <View
         style={{ flexDirection: "column", flexWrap: "wrap", marginTop: 19 }}
       >
-        {songs.map((item, index) => (
-          <View style={{ width: "50%" }}>
-            <ArtistCard key={index} {...item} />
+        {artists.map((address, index) => (
+          <View style={{ width: "50%" }} key={index}>
+            <ArtistCard address={address} />
           </View>
         ))}
       </View>
