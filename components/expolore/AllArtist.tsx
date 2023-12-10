@@ -52,7 +52,7 @@ const AllArtist = () => {
   useEffect(() => {
     const getAllArtist = async () => {
       const artistsall = await _getAllArtist();
-      console.log(artistsall, "these atetesshshsshhsshshshh");
+      console.log(artistsall, "sssssssss");
       setArtist(artistsall);
     };
     getAllArtist();
@@ -73,11 +73,13 @@ const AllArtist = () => {
       <View
         style={{ flexDirection: "column", flexWrap: "wrap", marginTop: 19 }}
       >
-        {artists.map((address, index) => (
-          <View style={{ width: "50%" }} key={index}>
-            <ArtistCard address={address} />
-          </View>
-        ))}
+        {/* {artists?.length == 0
+          ? null
+          : artists?.map((address, index) => (
+              <View style={{ width: "50%" }} key={index}>
+                <ArtistCard address={address} />
+              </View>
+            ))} */}
       </View>
     </View>
   );

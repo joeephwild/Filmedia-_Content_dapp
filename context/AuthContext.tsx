@@ -37,7 +37,6 @@ type AuthContextValue = {
   session: Session;
   createAnEOA: (
     name: string,
-    email: string,
     password: string,
     lensBool: boolean,
     privateKey: string
@@ -87,13 +86,11 @@ type AuthProviderProps = {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [session, setSession] = useState<Session>();
-  const [user, setUser] = useState<FirebaseAuthUser | null>(null);
   console.log("user", session);
   // useProtectedRoute(session);
 
   const createAnEOA = async (
     name: string,
-    email: string,
     password: string,
     lensBool: boolean,
     privateKey: string
@@ -105,13 +102,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     try {
       if (!lensBool) {
-        let { privateKey, walletAddress, phrase } = await _createWallet();
+        let { privateKey: key, walletAddress, phrase } = await _createWallet();
 
         const user = {
           name,
           password,
           walletAddress,
-          privateKey,
+          key,
           phrase,
         };
         console.log(user);
@@ -120,6 +117,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
           handle: name,
           to: walletAddress,
         });
+        console.log("creating.....");
+
         console.log(profileCreateResult);
         const profileCreateResultValue = profileCreateResult;
         if (!profileCreateResultValue) {

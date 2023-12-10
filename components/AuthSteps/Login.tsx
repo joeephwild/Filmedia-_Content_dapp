@@ -27,7 +27,7 @@ const Login = ({ setCurrentScreen }: Props) => {
     if (!password) return Alert.alert("fil up data");
 
     if (lens == true) {
-      await createAnEOA(name, email, password, lens, privateKey);
+      await createAnEOA(name, password, lens, privateKey);
     } else {
       await signin(email, password);
     }

@@ -19,13 +19,14 @@ const SignUp = ({ setCurrentScreen }: Props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [lens, setLoginWithLens] = useState(false);
 
   const { createAnEOA } = useAuth();
 
   const handleSubmit = async () => {
-    if (!name || !email || !password || password !== confirmPassword)
+    if (!name || !password || password !== confirmPassword)
       return Alert.alert("Fill up needed data");
-    createAnEOA(name, email, password);
+    createAnEOA(name, password, lens, "");
   };
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -46,13 +47,6 @@ const SignUp = ({ setCurrentScreen }: Props) => {
             value={name}
             placeholder="Enter your Handle"
             onChange={setName}
-            name=""
-          />
-          <InputField
-            label="E-mail"
-            value={email}
-            placeholder="example@gmail.com"
-            onChange={setEmail}
             name=""
           />
           <InputField

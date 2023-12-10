@@ -1,11 +1,11 @@
 import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
 
 export const PROVIDER =
-  "https://polygon-mumbai.g.alchemy.com/v2/v5XGTeB99ScNm1Kr5N7y_GsR0hT2NOsZ";
+  "https://polygonzkevm-testnet.g.alchemy.com/v2/0HUhRNHaWQm6WVJXb4ApKkzN8HLlrCB3";
 export const filMediaMarketplaceAddress =
-  "0x668034547fE00FDdac398995d0cc32016CCcdA49";
-export const dynamicNftAddress = "0x37Fcc95854a8E43c5D1b590e9dC0DCe8c62AFEf3";
-export const artistNFTAddress = "0x6c89189eCa87d4C121aB2654B7959417d5536424";
+  "0xd0200d3b63ec7be9838ce1bea93a2771efeaae9d";
+export const dynamicNftAddress = "0x1d1Af5cde8042E43d9787Ae5f2a6cAc09A673c90";
+export const artistNFTAddress = "0x9928Cc97fE9138FcF5DD2c635279A27768fa9324";
 
 export const client = new ApolloClient({
   cache: new InMemoryCache(),
