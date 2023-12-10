@@ -14,10 +14,12 @@ import {
   _getUserBalance,
   _getUserFromLocalStorage,
   _getWalletAddress,
+  _isWalletAnArtist,
 } from "../constants/_helperFunctions";
 import { ethers } from "ethers";
 import NFTs from "../components/NFTs";
 import { lensClient } from "../constants/LensApi";
+import { router } from "expo-router";
 
 const profile = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -25,6 +27,7 @@ const profile = () => {
   const [balance, setBalance] = useState("0");
   const [walletAddress, setwalletAddress] = useState("");
   const [handle, setHandle] = useState("");
+  const [isArtist, setIsArtist] = useState(false);
   const [follower, setFollower] = useState({
     followers: 0,
     following: 0,
@@ -64,11 +67,23 @@ const profile = () => {
       // setBalance(balance.toString());
     };
 
+    const isAnArtist = async () => {
+      const walletAddress: string = await _getWalletAddress();
+
+      const isArtistBool = await _isWalletAnArtist({
+        artistAddress: walletAddress,
+      });
+      setIsArtist(isArtistBool);
+    };
+    isAnArtist();
     getNFTByAddress();
     getProfile();
     getUserBalance();
   }, []);
 
+  const uploadContent = () => {
+    router.push("/upload");
+  };
   return (
     <ScrollView
       style={{ flex: 1, minHeight: "100%", marginBottom: 789 }}
@@ -114,7 +129,7 @@ const profile = () => {
         </View>
         <View style={{ flexDirection: "row", justifyContent: "center" }}>
           <TouchableOpacity
-            onPress={() => setModalVisible(true)}
+            onPress={() => uploadContent()}
             style={{
               marginTop: 29,
               paddingHorizontal: 24,

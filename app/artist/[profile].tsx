@@ -9,12 +9,19 @@ import Albums from "../../components/profile/Albums";
 import { SafeAreaView } from "react-native-safe-area-context";
 import PaymentModal from "../../components/PaymentModal";
 import { router } from "expo-router";
+import { lensClient } from "../../constants/LensApi";
 
 const ArtistProfile = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
-  const uploadContent = () => {
-    router.push("/upload");
+  const follow = async () => {
+    const result = await lensClient.profile.follow({
+      follow: [
+        {
+          profileId: "PROFILE_TO_FOLLOW_ID",
+        },
+      ],
+    });
   };
   return (
     <ScrollView
@@ -71,7 +78,7 @@ const ArtistProfile = () => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => uploadContent()}
+            onPress={() => follow()}
             style={{
               marginTop: 29,
               paddingHorizontal: 24,
@@ -84,7 +91,7 @@ const ArtistProfile = () => {
             className="mx-auto"
           >
             <Text style={{ fontSize: 12, fontWeight: "bold", color: "#fff" }}>
-              Upload Content
+              Follow
             </Text>
           </TouchableOpacity>
         </View>
