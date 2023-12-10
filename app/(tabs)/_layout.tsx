@@ -123,7 +123,7 @@ export default function TabLayout() {
             ),
           }}
         />
-        <Tabs.Screen
+        {/* <Tabs.Screen
           name="video"
           options={{
             tabBarLabel: "Video",
@@ -131,11 +131,11 @@ export default function TabLayout() {
               <Ionicons name="md-videocam" size={28} color={color} />
             ),
           }}
-        />
+        /> */}
         <Tabs.Screen
           name="nft"
           options={{
-            tabBarLabel: "NFTs",
+            tabBarLabel: "Profile",
             tabBarIcon: ({ color }) => (
               <Ionicons name="contrast" size={28} color={color} />
             ),
@@ -151,7 +151,7 @@ export default function TabLayout() {
           }}
         />
       </Tabs>
-      <MusicPlayer />
+      {/* <MusicPlayer /> */}
     </View>
   );
 }
