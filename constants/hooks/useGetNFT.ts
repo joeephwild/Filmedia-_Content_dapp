@@ -20,7 +20,7 @@ const useGetNFTs = (tokenId: number, nft: any) => {
     const tokenURIResponse = await (await fetch(requestURL)).json();
     console.log(tokenURIResponse);
     const imageURI = tokenURIResponse.image;
-    setImageURI(tokenURI);
+    setImageURI(imageURI);
     setTokenName(tokenURIResponse.name);
     setTokenDescription(tokenURIResponse.description);
     setCategory(tokenURIResponse.category);

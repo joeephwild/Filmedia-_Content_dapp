@@ -25,10 +25,12 @@ const SongsCard = ({ artist, image, name, title, tokenId }: Props) => {
     try {
       const { sound: playbackObject } = await Audio.Sound.createAsync(
         {
-          uri: "ss",
+          uri: imageURI,
         },
-        { shouldPlay: false }
+        { shouldPlay: true }
       );
+
+      playbackObject.stopAsync();
       // await soundObject.playAsync();
       // Your sound is playing!
     } catch (error) {
