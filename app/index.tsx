@@ -65,6 +65,7 @@ const OnboardingPage = () => {
     }
   };
 
+  //here is the error
   return (
     <View className="flex-1 items-center justify-center">
       <StatusBar barStyle="light-content" />
