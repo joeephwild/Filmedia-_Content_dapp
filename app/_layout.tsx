@@ -10,11 +10,6 @@ import React from "react";
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
 import { AuthProvider } from "../context/AuthContext";
-import {
-  Environment,
-  LensProvider,
-  Theme,
-} from "@lens-protocol/react-native-lens-ui-kit";
 import "@walletconnect/react-native-compat";
 import { WagmiConfig } from "wagmi";
 import { mainnet, polygon, arbitrum } from "viem/chains";

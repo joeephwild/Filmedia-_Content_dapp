@@ -9,22 +9,12 @@ import Albums from "../../components/profile/Albums";
 import { SafeAreaView } from "react-native-safe-area-context";
 import PaymentModal from "../../components/PaymentModal";
 import { router, useLocalSearchParams } from "expo-router";
-import { lensClient } from "../../constants/LensApi";
 
 const ArtistProfile = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const params = useLocalSearchParams();
   const { address } = params;
 
-  const follow = async () => {
-    const result = await lensClient.profile.follow({
-      follow: [
-        {
-          profileId: "PROFILE_TO_FOLLOW_ID",
-        },
-      ],
-    });
-  };
   return (
     <ScrollView
       style={{ flex: 1, minHeight: "100%", marginBottom: 789 }}

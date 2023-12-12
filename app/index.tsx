@@ -10,7 +10,7 @@ import {
   StatusBar,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import * as SecureStore from 'expo-secure-store';
+import * as SecureStore from "expo-secure-store";
 import { pagesData } from "../utils";
 import Slides from "../components/Slides";
 import { router } from "expo-router";
@@ -68,7 +68,7 @@ const OnboardingPage = () => {
   return (
     <View className="flex-1 items-center justify-center">
       <StatusBar barStyle="light-content" />
-      <FlatList
+      {/* <FlatList
         ref={flatListRef}
         data={pagesData}
         keyExtractor={(_, index) => index.toString()}
@@ -92,7 +92,7 @@ const OnboardingPage = () => {
             scrollX={scrollX}
           />
         )}
-      />
+      /> */}
 
       <View className="flex-row items-center justify-evenly w-full mb-[30px]">
         <Pressable

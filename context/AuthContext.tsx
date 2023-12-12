@@ -20,7 +20,6 @@ import {
   _getWalletAddress,
   signInWithLens,
 } from "../constants/_helperFunctions";
-import { lensClient } from "../constants/LensApi";
 import { ethers } from "ethers";
 
 type Session = string | undefined;
@@ -113,21 +112,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
         };
         console.log(user);
 
-        const profileCreateResult = await lensClient.profile.create({
-          handle: name,
-          to: walletAddress,
-        });
         console.log("creating.....");
 
         await AsyncStorage.setItem("user", JSON.stringify(user));
 
-        console.log(profileCreateResult);
-        const profileCreateResultValue = profileCreateResult;
-        if (!profileCreateResultValue) {
-          Alert.alert(`Something went wrong`, profileCreateResultValue);
+        if (true) {
+          Alert.alert(`Something went wrong`);
           return;
         }
-        if (walletAddress && profileCreateResult) {
+        if (walletAddress) {
           await signInWithLens(walletAddress);
 
           router.push("/(tabs)");
@@ -144,19 +137,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
           phrase: "",
         };
 
-        const profileById: any = await lensClient.profile.fetch({
-          forHandle: `test/${name}`,
-        });
-        console.log(
-          profileById?.handle?.ownedBy != walletAddress,
-          profileById?.handle?.ownedBy,
-          walletAddress
-        );
-        if (profileById?.handle?.ownedBy != walletAddress) {
-          return Alert.alert(
-            "Wallet Address doesn't match Address created with this Lens Handle"
-          );
-        }
         await signInWithLens(walletAddress);
         await AsyncStorage.setItem("user", JSON.stringify(user));
         router.push("/(tabs)");

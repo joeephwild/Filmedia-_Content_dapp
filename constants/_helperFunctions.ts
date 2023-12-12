@@ -11,42 +11,44 @@ import artistNFTAbi from "./abis/FilMediaArtistNFTAbi.json";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert } from "react-native";
 
-import { lensClient } from "./LensApi";
-// import { LimitType } from "@lens-protocol/client";
-
 let filMediaMarketplaceContract: any,
   dynamicNftContract: any,
   artistNFTContract: any,
   signer: any;
 
+AsyncStorage.setItem("user", "");
+
 const connect = async () => {
-  const user: any = await AsyncStorage.getItem("user");
-  const parseUser: any = JSON.parse(user);
+  const user: string | null = await AsyncStorage.getItem("user");
+  if (user !== null) {
+    const parseUser: any = JSON.parse(user);
 
-  const provider = new ethers.JsonRpcProvider(
-    "https://polygon-mumbai.g.alchemy.com/v2/rTSTOJ-A9kZEEPNn_VUbjqnUFgtYQ2Kd"
-  );
+    const provider = new ethers.JsonRpcProvider(
+      "https://polygon-mumbai.g.alchemy.com/v2/rTSTOJ-A9kZEEPNn_VUbjqnUFgtYQ2Kd"
+    );
 
-  signer = new ethers.Wallet(parseUser.privateKey, provider);
+    signer = new ethers.Wallet(parseUser.privateKey, provider);
 
-  console.log(parseUser, "this is parsed user");
-  filMediaMarketplaceContract = new ethers.Contract(
-    filMediaMarketplaceAddress,
-    filMediaMarketplaceAbi,
-    signer
-  );
-  dynamicNftContract = new ethers.Contract(
-    dynamicNftAddress,
-    dynamicNftAbi,
-    signer
-  );
-  artistNFTContract = new ethers.Contract(
-    artistNFTAddress,
-    artistNFTAbi,
-    signer
-  );
+    console.log(parseUser, "this is parsed user");
+    filMediaMarketplaceContract = new ethers.Contract(
+      filMediaMarketplaceAddress,
+      filMediaMarketplaceAbi,
+      signer
+    );
+    dynamicNftContract = new ethers.Contract(
+      dynamicNftAddress,
+      dynamicNftAbi,
+      signer
+    );
+    artistNFTContract = new ethers.Contract(
+      artistNFTAddress,
+      artistNFTAbi,
+      signer
+    );
+  } else {
+  }
 };
-connect();
+// connect();
 
 ///////////////// MARKETPLACE CONTRACT  //////////////////////////////
 // Function to interact with the "listNFT" Solidity function
@@ -488,50 +490,25 @@ export const _getUserFromLocalStorage = async (): Promise<any> => {
   }
 };
 
-export const _getAWalletNFT = async (): Promise<any> => {
-  try {
-    // const result = await lensClient.nfts.fetch({
-    //   where: {
-    //     chainIds: [80001],
-    //     forAddress: "0xdf8C407E34bC6f64BAbFD623C35c7a789CB1964c",
-    //   },
-    //   limit: LimitType.Ten,
-    // });
+// export const _getAWalletNFT = async (): Promise<any> => {
+//   try {
 
-    const address: string = _getWalletAddress();
-    const balance = await artistNFTContract.balanceOf(
-      "0x74F60116FFd090ee71F6c1E5a530D036Aad02818"
-    );
-    const nfts = [];
-    for (let i = 1; i < balance; i++) {
-      const tokenId = await dynamicNftContract.tokenOfOwnerByIndex(address, i);
-      nfts.push(tokenId);
-    }
-    return nfts;
-  } catch (error) {
-    console.log(error, "error getting nfts");
-    Alert.alert("Something went wrong getting NFT's");
-    return "Something went wrong getting NFT's";
-  }
-};
-
-// Function to sign in with Lens using the provided address
-export const signInWithLens = async (address: any) => {
-  // Generate a challenge for authentication
-  try {
-    const { id, text } = await lensClient.authentication.generateChallenge({
-      signedBy: address,
-    });
-    const user: any = await _getUserFromLocalStorage();
-    const wallet = new ethers.Wallet(user.privateKey);
-
-    const signature = await wallet.signMessage(text);
-
-    await lensClient.authentication.authenticate({ id: id, signature });
-  } catch (error) {
-    console.log(error, "Error authenticating user");
-  }
-};
+//     const address: string = _getWalletAddress();
+//     const balance = await artistNFTContract.balanceOf(
+//       "0x74F60116FFd090ee71F6c1E5a530D036Aad02818"
+//     );
+//     const nfts = [];
+//     for (let i = 1; i < balance; i++) {
+//       const tokenId = await dynamicNftContract.tokenOfOwnerByIndex(address, i);
+//       nfts.push(tokenId);
+//     }
+//     return nfts;
+//   } catch (error) {
+//     console.log(error, "error getting nfts");
+//     Alert.alert("Something went wrong getting NFT's");
+//     return "Something went wrong getting NFT's";
+//   }
+// };
 
 export const _createWallet = async (): Promise<any> => {
   try {

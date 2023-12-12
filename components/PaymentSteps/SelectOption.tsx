@@ -130,7 +130,7 @@ const SelectOption = ({ modalVisible, setModalVisible, handleNext }: Props) => {
                           shadowColor: "#000",
                         }}
                       >
-                        <FlatList
+                        {/* <FlatList
                           data={networks}
                           keyExtractor={(item) => item.name}
                           style={{
@@ -159,11 +159,14 @@ const SelectOption = ({ modalVisible, setModalVisible, handleNext }: Props) => {
                               <Text>{item.name}</Text>
                             </TouchableOpacity>
                           )}
-                        />
+                        /> */}
                       </View>
                     </View>
                   </Modal>
-                  <TouchableOpacity onPress={handleNext} className="bg-[#4169E1] flex-row itms-center justify-center py-[8px] px-[24px] mt-9 rounded-[40px]">
+                  <TouchableOpacity
+                    onPress={handleNext}
+                    className="bg-[#4169E1] flex-row itms-center justify-center py-[8px] px-[24px] mt-9 rounded-[40px]"
+                  >
                     <Text className="text-[12px] font-bold text-[#fff]">
                       Pay $5 to Subscribe to Davido
                     </Text>

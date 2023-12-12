@@ -8,9 +8,7 @@ import TopSongs from "../components/profile/TopSongs";
 import Albums from "../components/profile/Albums";
 import { SafeAreaView } from "react-native-safe-area-context";
 import PaymentModal from "../components/PaymentModal";
-import { ProfileFragment } from "@lens-protocol/client";
 import {
-  _getAWalletNFT,
   _getUserBalance,
   _getUserFromLocalStorage,
   _getWalletAddress,
@@ -18,7 +16,6 @@ import {
 } from "../constants/_helperFunctions";
 import { ethers } from "ethers";
 import NFTs from "../components/NFTs";
-import { lensClient } from "../constants/LensApi";
 import { router } from "expo-router";
 
 const profile = () => {
@@ -33,25 +30,25 @@ const profile = () => {
     following: 0,
   });
 
-  const [profile, setProfile] = useState<ProfileFragment | null>();
+  const [profile, setProfile] = useState();
   // console.log(profile?.metadata?.displayName)
 
   useEffect(() => {
-    const getProfile = async () => {
-      const user: any = await _getUserFromLocalStorage();
-      console.log(user);
-      const profileById: any = await lensClient.profile.fetch({
-        forHandle: `test/${user.name}`,
-      });
-      console.log("profileById", profileById?.followModule); // Add this line
-      console.log("profile", profileById?.handle?.ownedBy);
-      setProfile(profileById);
-      setHandle(profileById?.handle?.localName);
-      setFollower((_) => ({
-        followers: profileById?.stats.followers,
-        following: profileById?.stats.followers,
-      }));
-    };
+    // const getProfile = async () => {
+    //   const user: any = await _getUserFromLocalStorage();
+    //   console.log(user);
+    //   const profileById: any = await lensClient.profile.fetch({
+    //     forHandle: `test/${user.name}`,
+    //   });
+    //   console.log("profileById", profileById?.followModule); // Add this line
+    //   console.log("profile", profileById?.handle?.ownedBy);
+    //   setProfile(profileById);
+    //   setHandle(profileById?.handle?.localName);
+    //   setFollower((_) => ({
+    //     followers: profileById?.stats.followers,
+    //     following: profileById?.stats.followers,
+    //   }));
+    // };
     const getUserBalance = async () => {
       const walletAddress: string = await _getWalletAddress();
 
@@ -61,8 +58,7 @@ const profile = () => {
       setBalance(balance.toString());
     };
     const getNFTByAddress = async () => {
-      const nfts: any = await _getAWalletNFT();
-
+      // const nfts: any = await _getAWalletNFT();
       // setBalance(balance.toString());
     };
 
@@ -76,8 +72,8 @@ const profile = () => {
     };
     // isAnArtist();
     // getNFTByAddress();
-    getProfile();
-    getUserBalance();
+    // getProfile();
+    // getUserBalance();
   }, []);
 
   const uploadContent = () => {
