@@ -1,0 +1,53 @@
+{
+  "expo": {
+    "name": "Web5 Wallet",
+    "slug": "web5wallet",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets-expo/images/icon.png",
+    "scheme": "com.josephomotade0.web5wallet",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets-expo/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#191414"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "plugins": [
+      "expo-secure-store",
+      "expo-router",
+      "expo-av",
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone."
+        }
+      ],
+      "expo-font"
+    ],
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets-expo/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.josephomotade0.web5wallet",
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS"
+      ]
+    },
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "347e6cc4-38d8-4e9f-9138-e40fa442d1c5"
+      }
+    }
+  }
+}
