@@ -9,7 +9,7 @@ import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { FontAwesome } from "@expo/vector-icons";
 import { useAuth } from "../../context/AuthContext";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 
 const LogIn = () => {
   const [email, setEmail] = useState("");
@@ -38,41 +38,42 @@ const LogIn = () => {
     setPassword(text);
     setPasswordStrength(checkPasswordStrength(text));
   };
-  
+
+  const { signin } = useAuth();
 
   const handleSubmit = async () => {
-   
+    // const tx = await signin(email, password);
+    router.push("/(tabs)");
   };
   return (
     <View className="flex-1">
       <StatusBar style="light" />
-      <View className="px-[20px] py-4 h-full space-y-[16px] flex">
-        <View className="flex items-center mt-20 mb-4">
-          <Text className="text-[24px] font-opensans-bold text-[#fff] mb-14 text-center">
-            Creatify
-          </Text>
-          <Text className="text-[24px] font-opensans-bold text-[#fff] text-center mb-2">
-            Log In to your account
-          </Text>
-          <Text className="text-[14px] text-[#DDDDDD] font-opensans-regular text-center">
-            Back to the world of Blockchain.
+      <ImageBackground
+        source={{
+          uri: "https://images.pexels.com/photos/1809390/pexels-photo-1809390.jpeg?auto=compress&cs=tinysrgb&w=600",
+        }}
+        className="min-h-[60%] w-full"
+      ></ImageBackground>
+      <View className="px-[20px] py-4 min-h-[40%] space-y-[16px]">
+        <View className="items-start">
+          <Text className="text-[20px] font-opensans-bold text-[#fff]">
+            Welcome Back 😁
           </Text>
         </View>
-
         <View className="space-y-2">
-          <Text className="font-opensans-bold font-bold text-[10px] text-white">
+          <Text className="font-opensans-regular text-[#fff] text-[16px]">
             Email
           </Text>
           <TextInput
             placeholder="johndoe@gmail.com"
-            className="bg-white w-full rounded-full h-[48px] px-8"
+            className="bg-white w-full rounded-lg h-[40px] px-3"
             placeholderTextColor="#000"
             value={email}
             onChangeText={(text) => setEmail(text)}
           />
         </View>
         <View className="space-y-2">
-          <Text className="font-opensans-bold text-[#fff] font-bold text-[10px] text-white">
+          <Text className="font-opensans-regular text-[#fff] text-[16px]">
             Password
           </Text>
           <View
@@ -80,19 +81,18 @@ const LogIn = () => {
               flexDirection: "row",
               alignItems: "center",
               backgroundColor: "white",
-              borderRadius: 24,
-              height: 48,
+              borderRadius: 10,
+              height: 40,
               paddingHorizontal: 10,
             }}
           >
             <TextInput
-              className="px-8"
               secureTextEntry={!passwordVisible}
-              placeholder="*********"
+              placeholder="Enter password"
               style={{ flex: 1 }}
               placeholderTextColor="#000"
               value={password}
-              onChangeText={(text) => setPasswordAndCheckStrength(text)}
+              onChangeText={(text) => setPassword(text)}
             />
             <TouchableOpacity
               onPress={() => setPasswordVisible(!passwordVisible)}
@@ -105,27 +105,15 @@ const LogIn = () => {
             </TouchableOpacity>
           </View>
         </View>
-
-        <View className="w-full items-center justify-end flex-col flex-1">
+        <View className="w-full items-center">
           <TouchableOpacity
             onPress={handleSubmit}
-            className="bg-[#fc3c44] rounded-full py-[16px] mt-[10px] items-center justify-center px-10"
+            className="bg-[#ADF802] rounded-lg py-[16px] mt-[10px] items-center justify-center w-[90%]"
           >
-            <Text className="text-[16px]  font-opensans-bold text-[#fff]">
-              Login
+            <Text className="text-[16px]  font-opensans-bold text-[#000]">
+              Log in
             </Text>
           </TouchableOpacity>
-          <View className="flex flex-row my-6 justify-center">
-            <Text className="font-opensans-regular font-bold text-[14px] text-white">
-              Don't have an account?
-            </Text>
-            <Link
-              className="font-opensans-bold text-[#fc3c44] font-bold text-[14px] mx-2"
-              href={"/(auth)/"}
-            >
-              Sign Up
-            </Link>
-          </View>
         </View>
       </View>
     </View>

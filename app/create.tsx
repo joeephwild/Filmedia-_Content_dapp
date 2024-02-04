@@ -58,7 +58,7 @@ export default function Create() {
         >
           <View className="w-fit p-5 bg-black/80 space-x-9 mb-7 flex-row ml-[120px]">
             {steps.map((item, index) => (
-              <Pressable key={index} onPress={() => setActive(item)}>
+              <Pressable onPress={() => setActive(item)}>
                 <Text
                   className={`${
                     item === active ? "text-white" : "text-gray-500"

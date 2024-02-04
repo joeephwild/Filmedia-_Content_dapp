@@ -7,10 +7,8 @@ import LatestRelease from "../../components/profile/LatestRelease";
 import TopSongs from "../../components/profile/TopSongs";
 import Albums from "../../components/profile/Albums";
 import PaymentModal from "../../components/PaymentModal";
-import { router, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { artistsArr } from "../../utils";
-import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 interface ArtistProfile {
   name: string;
@@ -52,11 +50,11 @@ const ArtistProfile = () => {
         source={{
           uri: artistprofile?.image,
         }}
-        className="h-[356px] object-cover"
+        className="h-[296px] object-cover"
         imageStyle={{ resizeMode: "cover" }}
       >
         <LinearGradient
-          colors={["rgba(0, 0, 0, 0.01)", "#191414"]}
+          colors={["rgba(0, 0, 0, 0.01)", "#000"]}
           style={{
             position: "absolute",
             left: 0,
@@ -65,63 +63,59 @@ const ArtistProfile = () => {
             height: 180,
           }}
         />
-        <SafeAreaView className="flex-1">
-          <View className="flex-row  items-center justify-between px-9">
-            <FontAwesome
-              onPress={() => router.back()}
-              name="arrow-left"
-              size={20}
-              color="#fff"
-            />
-            <View className="flex-row items-center space-x-3">
-              <FontAwesome5 name="wallet" size={20} color="#fff" />
-              <FontAwesome5 name="cog" size={20} color="#fff" />
-            </View>
-          </View>
-          <View
-            style={{ alignItems: "center" }}
-            className="flex-1 mt-[70px] justify-end"
-          >
-            <Text style={{ fontSize: 40, fontWeight: "bold", color: "#fff" }}>
-              {artistprofile?.name}
-            </Text>
-            <Text
-              style={{ fontSize: 15, fontWeight: "bold", color: "#A8A8A8" }}
-            >
-              200:00 TLC
-            </Text>
-          </View>
-          <View className="flex-row items-end justify-end flex-1 mx-auto">
-            <TouchableOpacity className="mx-auto items-center mr-4 mt-7 px-6 py-2">
-              <Text className="font-opensans-bold text-[#fff] text-[20px]">
-                20.9k
-              </Text>
-              <Text
-                style={{ fontSize: 12, fontWeight: "bold", color: "#fff" }}
-                className="font-opensans-regular"
-              >
-                Following
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              // onPress={() => follow()}
-              className="mx-auto mt-7 px-6 py-2 items-center"
-            >
-              <Text className="font-opensans-bold text-[#fff] text-[20px]">
-                20.9k
-              </Text>
-              <Text
-                style={{ fontSize: 12, fontWeight: "bold", color: "#fff" }}
-                className="font-opensans-regular"
-              >
-                Subscribers
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </SafeAreaView>
       </ImageBackground>
+      <View style={{ position: "absolute", top: 135, right: 0, left: 0 }}>
+        <View style={{ alignItems: "center" }}>
+          <Text style={{ fontSize: 40, fontWeight: "bold", color: "#fff" }}>
+            {artistprofile?.name}
+          </Text>
+          <Text style={{ fontSize: 15, fontWeight: "bold", color: "#A8A8A8" }}>
+            {`${address.slice(0, 4)}...${address.slice(-4)}`}
+          </Text>
 
-      <View style={{ paddingTop: 20 }} className="flex-1 min-h-screen">
+          <Text style={{ fontSize: 16, fontWeight: "bold", color: "#A8A8A8" }}>
+            Subscribers 3.7M
+          </Text>
+        </View>
+        <View style={{ flexDirection: "row", justifyContent: "center" }}>
+          <TouchableOpacity
+            onPress={() => setModalVisible(true)}
+            style={{
+              marginTop: 29,
+              paddingHorizontal: 24,
+              backgroundColor: "#ADF802",
+              paddingVertical: 8,
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: 40,
+            }}
+            className="mx-auto mr-4"
+          >
+            <Text style={{ fontSize: 12, fontWeight: "bold", color: "#000" }}>
+              Subscribe for $5
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            // onPress={() => follow()}
+            style={{
+              marginTop: 29,
+              paddingHorizontal: 24,
+              backgroundColor: "#ADF802",
+              paddingVertical: 8,
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: 40,
+            }}
+            className="mx-auto"
+          >
+            <Text style={{ fontSize: 12, fontWeight: "bold", color: "#000" }}>
+              Follow
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <View style={{ paddingTop: 20 }}>
         <SubscriptionHeatmap />
         <LatestRelease />
         <TopSongs />

@@ -8,12 +8,12 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { useAuth } from "../../context/AuthContext";
 import MusicPlayer from "../../components/MusicPlayer";
 
-// function Fon(props: {
-//   name: React.ComponentProps<typeof FontAwesome>["name"];
-//   color: string;
-// }) {
-//   return <FontAwesome5 size={20} style={{ marginBottom: -3 }} {...props} />;
-// }
+function TabBarIcon(props: {
+  name: React.ComponentProps<typeof FontAwesome>["name"];
+  color: string;
+}) {
+  return <FontAwesome5 size={20} style={{ marginBottom: -3 }} {...props} />;
+}
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -22,16 +22,15 @@ export default function TabLayout() {
     <View style={{ flex: 1, flexDirection: "column-reverse" }}>
       <Tabs
         screenOptions={{
-          tabBarActiveTintColor: "#fc3c44",
-          tabBarInactiveTintColor: "",
+          tabBarActiveTintColor: "#ADF802",
           headerShown: false,
           tabBarStyle: {
-            backgroundColor: "#1B1212",
+            backgroundColor: "#000",
             // borderTopColor: "transparent",
           },
         }}
         sceneContainerStyle={{
-          backgroundColor: "#191414",
+          backgroundColor: "#000",
         }}
       >
         <Tabs.Screen
@@ -39,7 +38,7 @@ export default function TabLayout() {
           options={{
             title: "Explore",
             tabBarIcon: ({ color }) => (
-              <FontAwesome5 name="compass" color={color}  size={20}/>
+              <TabBarIcon name="compass" color={color} />
             ),
           }}
         />
@@ -48,7 +47,7 @@ export default function TabLayout() {
           options={{
             title: "Search",
             tabBarIcon: ({ color }) => (
-              <FontAwesome5 name="search" color={color} size={20} />
+              <TabBarIcon name="search" color={color} />
             ),
           }}
         />
@@ -57,7 +56,7 @@ export default function TabLayout() {
           options={{
             title: "Music",
             tabBarIcon: ({ color }) => (
-              <FontAwesome5 name="music" color={color} size={20}/>
+              <TabBarIcon name="music" color={color} />
             ),
           }}
         />
@@ -66,7 +65,7 @@ export default function TabLayout() {
           options={{
             title: "Videos",
             tabBarIcon: ({ color }) => (
-              <FontAwesome5 name="video" color={color} size={20} />
+              <TabBarIcon name="video" color={color} />
             ),
           }}
         />
@@ -75,19 +74,19 @@ export default function TabLayout() {
           options={{
             title: "Ticket",
             tabBarIcon: ({ color }) => (
-              <FontAwesome5 name="ticket-alt" color={color} size={20}/>
+              <TabBarIcon name="ticket-alt" color={color} />
             ),
           }}
         />
-        <Tabs.Screen
+        {/* <Tabs.Screen
           name="live"
           options={{
             title: "Live Event",
             tabBarIcon: ({ color }) => (
-              <FontAwesome5 name="broadcast-tower" color={color} size={20} />
+              <TabBarIcon name="broadcast-tower" color={color} />
             ),
           }}
-        />
+        /> */}
       </Tabs>
       {playerOpen && <MusicPlayer currentlyplayed={currentlyPlayed} />}
     </View>

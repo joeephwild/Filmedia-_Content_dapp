@@ -1,4 +1,9 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import React, { useEffect } from "react";
@@ -7,7 +12,6 @@ import { AuthProvider, useAuth } from "../context/AuthContext";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-gesture-handler";
 import { PortalProvider } from "@gorhom/portal";
-import { Web5Provider } from "../context/Web5Context";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -56,30 +60,29 @@ function RootLayoutNav() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <PortalProvider>
         <AuthProvider>
-          <Web5Provider>
-            <Stack
-              screenOptions={{
-                contentStyle: {
-                  backgroundColor: "#191414",
-                },
-              }}
-            >
-              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-              <Stack.Screen name="index" options={{ headerShown: false }} />
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-              <Stack.Screen name="profile" options={{ headerShown: false }} />
-              <Stack.Screen
-                name="artist/[profile]"
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="vid/[title]"
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen name="create" options={{ headerShown: false }} />
-            </Stack>
-          </Web5Provider>
+          <Stack
+            screenOptions={{
+              contentStyle: {
+                backgroundColor: "#000",
+              },
+            }}
+          >
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+            <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+            <Stack.Screen name="profile" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="artist/[profile]"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen name="vid/[title]" options={{ headerShown: false }} />
+            <Stack.Screen name="create" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="createProfile"
+              options={{ headerShown: false }}
+            />
+          </Stack>
         </AuthProvider>
       </PortalProvider>
     </GestureHandlerRootView>

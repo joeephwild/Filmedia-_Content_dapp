@@ -12,7 +12,7 @@ import { router } from "expo-router";
 
 const onBoradingSteps = [
   {
-    title: "Welcome to Creatify, where Social Content and blockchain unite!",
+    title: "Welcome to Filmedia, where Social Content and blockchain unite!",
     image:
       "https://images.pexels.com/photos/9853880/pexels-photo-9853880.jpeg?auto=compress&cs=tinysrgb&w=600",
     description:
@@ -114,7 +114,7 @@ const Index = () => {
             onPress={handleSkip}
             className="rounded-[40px] py-[12px] px-[20px] mt-[80px] items-center justify-center"
           >
-            <Text className="text-[16px]  font-opensans-bold text-[#fc3c44]">
+            <Text className="text-[16px]  font-opensans-bold text-[#fff]">
               Skip
             </Text>
           </TouchableOpacity>
@@ -124,7 +124,7 @@ const Index = () => {
                 key={index}
                 className={`h-2 rounded w-[20px] ${
                   currentIndex === index
-                    ? "bg-[#fc3c44]"
+                    ? "bg-blue-400"
                     : "bg-white w-2 rounded-full"
                 }`}
               />
@@ -141,7 +141,7 @@ const Index = () => {
           {currentIndex != 2 && (
             <TouchableOpacity
               onPress={handleNext}
-              className="bg-[#fc3c44] rounded-[40px] py-[16px] mt-[30px] items-center justify-center w-[80%]"
+              className="bg-[#ADF802] rounded-[40px] py-[16px] mt-[30px] items-center justify-center w-[80%]"
             >
               <Text className="text-[16px]  font-opensans-bold text-[#000]">
                 Get Started
@@ -154,13 +154,13 @@ const Index = () => {
                 onPress={() => router.push("/(auth)/login")}
                 className=" rounded-[40px] py-[16px] mt-[30px] items-center justify-center"
               >
-                <Text className="text-[16px]  font-opensans-bold text-[#fc3c44]">
+                <Text className="text-[16px]  font-opensans-bold text-[#000]">
                   Login
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => router.push("/(auth)/")}
-                className="bg-[#fc3c44] rounded-[40px] py-[16px] px-[40px] mt-[30px] items-center justify-center"
+                className="bg-[#ADF802] rounded-[40px] py-[16px] px-[40px] mt-[30px] items-center justify-center"
               >
                 <Text className="text-[16px]  font-opensans-bold text-[#000]">
                   Create Wallet

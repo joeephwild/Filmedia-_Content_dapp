@@ -26,22 +26,17 @@ const VideoDetail = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Video
-        source={{
-          uri: "https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
-        }}
-        useNativeControls
-        resizeMode={ResizeMode.COVER}
-        isLooping={false}
-        style={styles.video}
-      />
-      <ScrollView
-        style={{
-          flex: 1,
-          minHeight: "100%",
-          backgroundColor: "#000"
-        }}
-      >
+      <ScrollView>
+        <Video
+          source={{
+            uri: "https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
+          }}
+          useNativeControls
+          resizeMode={ResizeMode.COVER}
+          isLooping={false}
+          style={styles.video}
+        />
+
         <View style={styles.videoDetails}>
           <Text style={styles.title}>Video Title</Text>
           <View className="flex-row items-center justify-between py-6 w-full">
@@ -91,12 +86,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 8,
-    color: "#fff",
+    color: "#fff"
   },
   creatorName: {
     fontSize: 16,
     marginBottom: 8,
-    color: "#fff",
+    color: "#fff"
   },
   subscribeButton: {
     backgroundColor: "#FF0000",
